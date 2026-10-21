@@ -392,34 +392,33 @@ HTML = r"""<!DOCTYPE html>
                     <div class="portrait-frame p-3 pb-4 max-w-[320px] w-full rounded-sm">
                         <div class="w-full h-48 md:h-52 bg-[#e2d1b8] rounded overflow-hidden">
                             <img src="blanco.jpeg"
-                                 onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'img-fallback\'><span class=\'text-2xl\'>✦</span><strong class=\'text-xs mt-1\'>Fotografía de prueba</strong><small class=\'text-[10px] opacity-75 font-mono-custom\'>blanco.jpeg</small></div>';"
+                                 onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'img-fallback\'><span class=\'text-2xl\'>✦</span><strong class=\'text-xs mt-1\'>Fotografía de prueba</strong><small class=\'text-[10px] opacity-75 font-mono-custom\'>Simon.jpeg</small></div>';"
                                  alt="Fotografía de portada"
                                  class="w-full h-full object-cover filter grayscale contrast-95">
                         </div>
                         <div class="text-center mt-3 font-mono-custom text-xs text-[#79583e] tracking-wider uppercase font-semibold">
-                            TU NOMBRE · PORTAFOLIO II
+                            SIMÓN MESA DÍAZ · PORTAFOLIO II
                         </div>
                     </div>
                 </div>
 
                 <div class="lg:col-span-8 space-y-4">
                     <div class="font-mono-custom text-xs tracking-widest text-[#8d5b3d] uppercase">
-                        Cuaderno digital · Semestre II · Edición 02
+                        Cuaderno digital · Semestre 2026-02 · Edición 02
                     </div>
                     <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
                         <span class="title-star">✦</span>Interfaces<br>
                         <span class="italic shimmer-text">multimodales.</span><span class="title-star end">✦</span>
                     </h1>
                     <div class="text-base md:text-lg text-[#65442f] leading-relaxed max-w-3xl">
-                        Hola, soy <strong>Tu Nombre Aquí</strong>. Este espacio reúne mis experiencias, experimentos y aprendizajes de la segunda parte del semestre.
+                        Hola, soy <strong>Simón Mesa Díaz</strong> y me encuentro cursando el sexto semestre del pregrado de Diseño Interactivo en la Universidad EAFIT. Este espacio reúne mis experiencias, experimentos y aprendizajes de la segunda parte de las clases de "Creación de Interfaces Multimodales" del semestre.
                         <br><br>
-                        Aprender haciendo, experimentar sin miedo y transformar ideas en experiencias interactivas y multimodales.
+                        Aprender haciendo, experimentar sin miedo y transformar códigos e ideas en experiencias interactivas con intención y temáticas aplicables de forma multimodal.
                     </div>
                     <div class="flex flex-wrap gap-2 pt-2">
                         <span class="tag-chip px-3 py-1 bg-[#fff9ef] border border-[#cdb393] rounded-full text-xs font-mono-custom text-[#694a32]">✳ Diseño interactivo</span>
                         <span class="tag-chip px-3 py-1 bg-[#fff9ef] border border-[#cdb393] rounded-full text-xs font-mono-custom text-[#694a32]">⌘ Experimentación</span>
                         <span class="tag-chip px-3 py-1 bg-[#fff9ef] border border-[#cdb393] rounded-full text-xs font-mono-custom text-[#694a32]">↗ Aprender haciendo</span>
-                        <span class="tag-chip px-3 py-1 bg-[#fff9ef] border border-[#cdb393] rounded-full text-xs font-mono-custom text-[#694a32]">☕ Edición vintage</span>
                     </div>
                 </div>
             </div>
