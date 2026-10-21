@@ -889,7 +889,7 @@ elif seccion == "Sobre mí":
 
     with col_foto:
         foto_sobre_mi = cargar_foto(
-            "imagenes/perfil/Blanco.jpg",
+            "imagenes/perfil/Blanco.jpeg",
             "Fotografía personal",
         )
 
@@ -923,9 +923,3 @@ elif seccion == "Sobre mí":
         '<div class="pie">MI PORTAFOLIO CREATIVO · 2026</div>',
         unsafe_allow_html=True,
     )
-
-
-<div class="footer">
-    FIN DE LA PÁGINA, NO DEL PROCESO · DISEÑADO CON CURIOSIDAD
-</div>
-""", unsafe_allow_html=True)
