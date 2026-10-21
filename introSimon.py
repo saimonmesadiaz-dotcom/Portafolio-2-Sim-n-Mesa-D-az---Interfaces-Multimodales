@@ -96,7 +96,6 @@ st.sidebar.markdown(SIDEBAR_HTML, unsafe_allow_html=True)
 
 # ============================================================
 # HTML DEL PORTAFOLIO (portada + galería)
-# Para editar actividades: busca "const actividades" más abajo.
 # ============================================================
 HTML = r"""<!DOCTYPE html>
 <html lang="es">
@@ -465,30 +464,30 @@ HTML = r"""<!DOCTYPE html>
 
     <script>
         // ============================================================
-        // EDITA AQUÍ: cambia titulo, resumen, descripcion, aprendizaje y url
+        // EDITAR AQUÍ: cambia titulo, resumen, descripcion, aprendizaje y url
         // de cada actividad cuando tengas tus contenidos reales.
         // ============================================================
         const actividades = [
-            { id: 1, titulo: "Actividad 01: Reconocimiento Interactivo", categoria: "Práctica · 01",
+            { id: 1, titulo: "Actividad 01: Detección de Números a través de dibujos", categoria: "Práctica · 01",
               resumen: "Experimentación con lienzo digital y detección de patrones de dibujo libre.",
               descripcion: "En esta actividad se desarrolló una interfaz interactiva capaz de procesar trazos de dibujo en tiempo real. Se evaluaron respuestas visuales y retroalimentación auditiva suave al usuario.",
               aprendizaje: "Lógica de captura de coordenadas en Canvas y optimización de eventos de ratón.",
-              url: "https://github.com", botonTexto: "Abrir recurso" },
-            { id: 2, titulo: "Actividad 02: Simulación Multimodal", categoria: "Experimentación · 02",
+              url: "https://mnistpredsimon-5vckfxydhqvco4snzsuo8s.streamlit.app/",  botonTexto: "Abrir recurso" },
+            { id: 2, titulo: "Actividad 02 (Editada) - Tablero Personalizado", categoria: "Edición · 02",
               resumen: "Visualización de entrada de datos continuos simulando sensores de movimiento.",
               descripcion: "Implementación de dashboards de monitoreo con estética analógica donde los valores varían suavemente generando gráficos de respuesta rápida.",
               aprendizaje: "Manejo de estado asíncrono y mapeo de variables continuas.",
-              url: "https://github.com", botonTexto: "Abrir recurso" },
-            { id: 3, titulo: "Actividad 03: Interfaces Accesibles", categoria: "Interfaz · 03",
+              url: "https://repositorio-2-simon-eg936rwzmxxzqdssn5lhlk.streamlit.app/", botonTexto: "Abrir recurso" },
+            { id: 3, titulo: "Actividad 03:Tablero Reconocimiento", categoria: "Interfaz · 03",
               resumen: "Integración de componentes de interacción por voz e imagen en una sola vista.",
               descripcion: "Exploración de prototipos centrados en la accesibilidad multimodal, permitiendo alternar entre interacción táctil y comandos de audio.",
               aprendizaje: "Diseño inclusivo y jerarquización de canales de entrada.",
-              url: "https://github.com", botonTexto: "Abrir recurso" },
-            { id: 4, titulo: "Actividad 04: Renderizado Espacial 3D", categoria: "Simulación · 04",
+              url: "https://drawrecogsimon-mrzchike38innmhbruk49k.streamlit.app/", botonTexto: "Abrir recurso" },
+            { id: 4, titulo: "Actividad 04: Tsblero Personalizado Cuenta Historias", categoria: "Simulación · 04",
               resumen: "Pruebas de renderizado y manipulación de objetos tridimensionales.",
               descripcion: "Uso de canvas para construir un entorno miniatura interactivo con respuestas de iluminación física simulada.",
               aprendizaje: "Control de cámaras interactivas y transformaciones espaciales.",
-              url: "https://github.com", botonTexto: "Abrir recurso" },
+              url: "https://simonhistoriadibujo-cbtrgvlhhqu3aht43y8tlo.streamlit.app/", botonTexto: "Abrir recurso" },
             { id: 5, titulo: "Actividad 05: Procesamiento de Imagen", categoria: "Tecnología · 05",
               resumen: "Procesamiento en blanco y negro para clasificación de bordes visuales.",
               descripcion: "Desarrollo de un flujo de análisis de imágenes que detecta contornos y contrastes, transformando lo que se ve en información que la interfaz puede interpretar.",
