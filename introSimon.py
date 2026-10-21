@@ -307,6 +307,33 @@ HTML = r"""<!DOCTYPE html>
         .nav-item span { display: inline-block; transition: transform .4s ease, color .3s; }
         .nav-item:hover span { transform: rotate(180deg) scale(1.35); color: #e8c27a; }
 
+        /* Estrellitas a los extremos del título */
+        .title-star {
+            display: inline-block; color: #65442f; font-size: .42em;
+            vertical-align: middle; margin: 0 .5em 0 0;
+            animation: twinkle 3.2s ease-in-out infinite;
+        }
+        .title-star.end { margin: 0 0 0 .35em; animation-delay: -1.6s; }
+        @keyframes twinkle {
+            0%,100% { transform: scale(1) rotate(0deg); opacity: .95; }
+            50%     { transform: scale(1.4) rotate(90deg); opacity: .55; }
+        }
+
+        /* Tarjeta de reflexión sobre multimodalidad */
+        .modal-note {
+            background: linear-gradient(135deg, #fffaf0, #f2e4cf);
+            border: 1px solid #d2b895; border-radius: 16px;
+            box-shadow: 0 10px 24px rgba(56,37,29,.1);
+        }
+        .channel-chip {
+            display: inline-flex; align-items: center; gap: .4rem;
+            padding: .35rem .8rem; border-radius: 999px;
+            background: #fff9ef; border: 1px solid #cdb393; color: #694a32;
+            font-family: 'DM Mono', monospace; font-size: .75rem;
+            transition: transform .25s ease, background-color .25s ease, color .25s ease;
+        }
+        .channel-chip:hover { transform: translateY(-3px) rotate(-2deg); background: #65442f; color: #fff8ec; }
+
         @media (prefers-reduced-motion: reduce) {
             *, *::before, *::after { animation: none !important; transition: none !important; }
             .reveal:not(.in) { opacity: 1; }
@@ -324,7 +351,7 @@ HTML = r"""<!DOCTYPE html>
                 <p class="font-mono-custom text-xs tracking-wider text-[#d5bea0] uppercase">Portafolio · Segunda Etapa</p>
             </div>
             <p class="text-sm text-[#dfc8ae] leading-relaxed mb-6 font-sans">
-                Una colección de actividades, recursos y pruebas de clase. Esta versión utiliza contenido provisional preparado para previsualización.
+                Una colección de experimentos donde la voz, el gesto, el tacto y la imagen se combinan para crear formas más naturales de dialogar con la tecnología.
             </p>
             <div class="vintage-divider my-4"></div>
             <div class="space-y-3">
@@ -339,7 +366,7 @@ HTML = r"""<!DOCTYPE html>
             </div>
         </div>
         <div class="mt-8 pt-4 border-t border-[#65442f]/40 font-mono-custom text-xs text-[#b89c7d]">
-            Plantilla de prueba · Hecha con curiosidad y café ☕
+            Voz · Gesto · Tacto · Imagen · Sonido
         </div>
     </aside>
 
@@ -373,8 +400,8 @@ HTML = r"""<!DOCTYPE html>
                         Cuaderno digital · Semestre II · Edición 02
                     </div>
                     <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
-                        Interfaces<br>
-                        <span class="italic shimmer-text">multimodales.</span>
+                        <span class="title-star">✦</span>Interfaces<br>
+                        <span class="italic shimmer-text">multimodales.</span><span class="title-star end">✦</span>
                     </h1>
                     <div class="text-base md:text-lg text-[#65442f] leading-relaxed max-w-3xl">
                         Hola, soy <strong>Tu Nombre Aquí</strong>. Este espacio reúne mis experiencias, experimentos y aprendizajes de la segunda parte del semestre.
@@ -400,16 +427,24 @@ HTML = r"""<!DOCTYPE html>
             <div class="font-mono-custom text-xs tracking-widest text-[#8d5b3d] uppercase mb-1">Galería de procesos · 01—08</div>
             <h2 class="text-3xl md:text-4xl font-bold text-[#38251d]">Actividades prácticas realizadas</h2>
             <p class="text-sm text-[#725942] mt-2">
-                Pasa el cursor sobre las tarjetas Polaroid para ampliarlas. Usa el botón «Leer más» para desplegar la descripción detallada o «Abrir recurso» para ir al enlace.
+                Cada tarjeta es un experimento: una manera distinta de combinar sentidos y canales para que las personas interactúen con la tecnología.
             </p>
         </div>
 
         <div class="gallery-grid" id="cardsContainer"></div>
 
-        <div id="reflexiones" class="mt-12 p-4 border border-[#d2b895] rounded-xl bg-[#fff9ee]/70 text-sm text-[#765a43] flex items-center gap-3">
-            <span class="text-xl">✦</span>
-            <div>
-                <strong>Modo plantilla demostrativa:</strong> Galería configurada con exactamente 8 cards de actividades. Los botones están listos para vincular tus proyectos finales.
+        <div id="reflexiones" class="modal-note mt-12 p-6 md:p-8">
+            <div class="font-mono-custom text-xs tracking-widest text-[#8d5b3d] uppercase mb-2">Reflexión · Multimodalidad</div>
+            <h3 class="font-serif-custom text-2xl md:text-3xl font-bold mb-3">Hablar con la tecnología con todos los sentidos</h3>
+            <p class="text-[#65442f] leading-relaxed max-w-3xl mb-4">
+                Una interfaz multimodal no depende de un solo canal: permite tocar, hablar, señalar, mirar o escuchar, y elegir en cada momento la forma más natural de comunicarse. Diseñar así es pensar en las personas, en sus contextos y en sus capacidades, para que la tecnología se adapte a ellas y no al revés.
+            </p>
+            <div class="flex flex-wrap gap-2">
+                <span class="channel-chip">✋ Tacto</span>
+                <span class="channel-chip">🎙 Voz</span>
+                <span class="channel-chip">👁 Visión</span>
+                <span class="channel-chip">☝ Gesto</span>
+                <span class="channel-chip">🔊 Sonido</span>
             </div>
         </div>
 
@@ -446,7 +481,7 @@ HTML = r"""<!DOCTYPE html>
               url: "https://github.com", botonTexto: "Abrir recurso" },
             { id: 5, titulo: "Actividad 05: Procesamiento de Imagen", categoria: "Tecnología · 05",
               resumen: "Procesamiento en blanco y negro para clasificación de bordes visuales.",
-              descripcion: "Desarrollo de un pipeline para analizar imágenes cargadas localmente (usando blanco.jpeg como referencia por defecto) y aplicar matriz de contraste.",
+              descripcion: "Desarrollo de un flujo de análisis de imágenes que detecta contornos y contrastes, transformando lo que se ve en información que la interfaz puede interpretar.",
               aprendizaje: "Filtros de imagen mediante CSS/Canvas y matriz de convolución.",
               url: "https://github.com", botonTexto: "Abrir recurso" },
             { id: 6, titulo: "Actividad 06: Ergonomía y Estética Vintage", categoria: "Aprendizaje · 06",
