@@ -391,7 +391,7 @@ HTML = r"""<!DOCTYPE html>
                 <div class="lg:col-span-4 flex justify-center lg:justify-start">
                     <div class="portrait-frame p-3 pb-4 max-w-[320px] w-full rounded-sm">
                         <div class="w-full h-48 md:h-52 bg-[#e2d1b8] rounded overflow-hidden">
-                            <img src="blanco.jpeg"
+                            <img src="Simon.jpeg"
                                  onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'img-fallback\'><span class=\'text-2xl\'>✦</span><strong class=\'text-xs mt-1\'>Fotografía de prueba</strong><small class=\'text-[10px] opacity-75 font-mono-custom\'>Simon.jpeg</small></div>';"
                                  alt="Fotografía de portada"
                                  class="w-full h-full object-cover filter grayscale contrast-95">
