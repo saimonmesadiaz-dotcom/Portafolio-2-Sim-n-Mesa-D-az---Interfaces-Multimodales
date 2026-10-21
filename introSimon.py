@@ -1,574 +1,370 @@
-import base64
-import html
-import mimetypes
-from pathlib import Path
-from urllib.parse import urlparse
-
-import streamlit as st
-
-# ==========================================================
-# PORTAFOLIO II — INTERFACES MULTIMODALES
-# ==========================================================
-
-st.set_page_config(
-    page_title="Portafolio II | Interfaces Multimodales",
-    layout="wide",
-    initial_sidebar_state="expanded",
-)
-
-# ==========================================================
-# CONFIGURACIÓN
-# ==========================================================
-
-CARPETA = Path(__file__).resolve().parent
-FOTO = "Blanco.jpg"
-
-
-# ==========================================================
-# FUNCIONES AUXILIARES
-# ==========================================================
-
-def esc(texto):
-    """Evita que los textos introducidos rompan el HTML."""
-    return html.escape(str(texto), quote=True)
-
-
-def cargar_foto(nombre, clase):
-    """
-    Carga una imagen local y la convierte en una imagen integrada.
-    Si no existe, muestra un espacio provisional.
-    """
-    ruta = CARPETA / nombre
-
-    if ruta.is_file():
-        mime = mimetypes.guess_type(ruta.name)[0] or "image/jpeg"
-        datos = base64.b64encode(ruta.read_bytes()).decode("utf-8")
-
-        return (
-            f'<img class="{clase}" '
-            f'src="data:{mime};base64,{datos}" '
-            f'alt="Fotografía de prueba">'
-        )
-
-    return """
-    <div class="placeholder">
-        <span>✦</span>
-        <strong>Fotografía de prueba</strong>
-        <small>Agrega el archivo Blanco.jpeg</small>
-    </div>
-    """
-
-
-def crear_enlace(url, texto):
-    """Crea un enlace únicamente si se ha configurado una URL válida."""
-    url = str(url).strip()
-    partes = urlparse(url)
-
-    if partes.scheme in ("https", "http") and partes.netloc:
-        return (
-            f'<a class="link-button" href="{esc(url)}" '
-            f'target="_blank" rel="noopener noreferrer">'
-            f'↗ {esc(texto)}</a>'
-        )
-
-    return '<span class="pending">↗ Enlace pendiente</span>'
-
-
-# ==========================================================
-# ESTILOS CSS — ESTÉTICA VINTAGE CREMA Y CAFÉ
-# ==========================================================
-
-st.markdown("""
-<style>
-@import url('https://fonts.googleapis.com/css2?family=DM+Mono&family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
-
-:root {
-    --dark: #38251d;
-    --coffee: #65442f;
-    --brown: #916a49;
-    --beige: #ead7bb;
-    --cream: #fff8ec;
-    --ink: #402d21;
-}
-
-.stApp {
-    background:
-        radial-gradient(ellipse at 10% 10%, #fff8e9, transparent 38%),
-        linear-gradient(135deg, #e4ceb0, #f6ead7 50%, #dfc4a0);
-    font-family: 'DM Sans', sans-serif;
-    color: var(--ink);
-}
-
-[data-testid="stHeader"] {
-    background: transparent;
-}
-
-.block-container {
-    max-width: 1450px;
-    padding-top: 2rem;
-    padding-bottom: 3rem;
-}
-
-#MainMenu, footer {
-    visibility: hidden;
-}
-
-h1, h2, h3 {
-    font-family: 'Playfair Display', serif !important;
-    color: var(--dark) !important;
-}
-
-p {
-    line-height: 1.8;
-    color: #79634f;
-}
-
-section[data-testid="stSidebar"] {
-    background: linear-gradient(170deg, #493025, #302019);
-}
-
-section[data-testid="stSidebar"] * {
-    color: #f8e9d2 !important;
-}
-
-section[data-testid="stSidebar"] h1,
-section[data-testid="stSidebar"] h2,
-section[data-testid="stSidebar"] h3 {
-    font-family: 'Playfair Display', serif !important;
-}
-
-hr {
-    border: none;
-    height: 1px;
-    background: linear-gradient(
-        90deg,
-        transparent,
-        #98704e,
-        #e0c49e,
-        #98704e,
-        transparent
-    );
-    margin: 2.5rem 0;
-}
-
-/* ==================================================
-   PORTADA (POLAROID IZQUIERDA / TEXTO DERECHA)
-================================================== */
-
-.hero {
-    padding: clamp(2rem, 4vw, 3.5rem);
-    border: 1px solid #d2b99a;
-    border-radius: 26px;
-    background: linear-gradient(125deg, #fff9ed, #ead6b8);
-    box-shadow: 0 18px 42px #573a261f;
-    margin-bottom: 2rem;
-}
-
-.hero-grid {
-    display: grid;
-    grid-template-columns: 280px 1fr;
-    gap: 3rem;
-    align-items: center;
-}
-
-.eyebrow {
-    font: .72rem 'DM Mono', monospace;
-    letter-spacing: .17em;
-    text-transform: uppercase;
-    color: #946d4b;
-    margin-bottom: 0.5rem;
-}
-
-.hero h1 {
-    font-size: clamp(2.5rem, 4.5vw, 4.2rem);
-    line-height: 1.1;
-    margin: 0.5rem 0 1rem 0;
-}
-
-.hero h1 em {
-    color: #9a714d;
-}
-
-.hero-copy {
-    line-height: 1.8;
-    color: #725942;
-    margin-bottom: 1.5rem;
-}
-
-.tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-}
-
-.tag {
-    padding: 6px 12px;
-    border: 1px solid #cdb393;
-    border-radius: 30px;
-    background: #fff9ef;
-    color: #694a32;
-    font: .7rem 'DM Mono', monospace;
-}
-
-.portrait-frame {
-    padding: 12px 12px 28px;
-    background: #fffaf0;
-    box-shadow: 8px 12px 0 #69482b20, 0 15px 30px #40291924;
-    transform: rotate(-2deg);
-    width: 100%;
-}
-
-.portrait {
-    display: block;
-    width: 100%;
-    height: 240px;
-    object-fit: cover;
-    filter: grayscale(1) contrast(.95);
-    background: #e2d1b8;
-    border-radius: 4px;
-}
-
-.caption {
-    text-align: center;
-    margin-top: 12px;
-    font: .68rem 'DM Mono', monospace;
-    color: #79583e;
-}
-
-/* ==================================================
-   GALERÍA DE 2 COLUMNAS
-================================================== */
-
-.section-title {
-    margin: 3rem 0 1.5rem;
-}
-
-.section-title h2 {
-    font-size: clamp(2rem, 3.5vw, 2.8rem);
-    margin: .3rem 0;
-}
-
-.gallery {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 28px;
-    padding: 10px 0 30px;
-    align-items: start;
-}
-
-/* TARJETAS POLAROID */
-
-.card {
-    position: relative;
-    isolation: isolate;
-    padding: 16px;
-    border: 1px solid #d5bea0;
-    border-radius: 18px;
-    background: linear-gradient(145deg, #fffaf0, #f0dfc7);
-    box-shadow: 0 10px 22px #432d1f20;
-    transition: transform .3s ease, box-shadow .3s ease, border-color .3s ease;
-}
-
-/* EFECTO HOVER: SE AGRANDA Y BORDE CAFÉ */
-
-.card:hover {
-    transform: translateY(-6px) scale(1.02);
-    border-color: #65442f;
-    box-shadow: 0 20px 35px #39251d35, 0 0 0 2px #65442f40;
-    background: #fffdf7;
-    z-index: 5;
-}
-
-.polaroid {
-    display: block;
-    width: 100%;
-    height: 210px;
-    object-fit: cover;
-    border-radius: 6px;
-    border: 1px solid #6c4a301c;
-    filter: grayscale(1) contrast(.95);
-    background: #e6d3b6;
-    transition: filter .3s;
-}
-
-.card:hover .polaroid {
-    filter: grayscale(.2);
-}
-
-.meta {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin: 14px 2px 8px;
-    font: .65rem 'DM Mono', monospace;
-    text-transform: uppercase;
-    letter-spacing: .06em;
-    color: #987554;
-}
-
-.number {
-    border: 1px solid #d5b995;
-    background: #f6e7d1;
-    border-radius: 50%;
-    padding: 4px 8px;
-    text-align: center;
-}
-
-.card h3 {
-    font: 600 1.25rem/1.2 'Playfair Display', serif !important;
-    margin: 0 2px .5rem !important;
-    color: var(--dark) !important;
-}
-
-.summary {
-    font-size: .88rem;
-    line-height: 1.6;
-    color: #796451;
-    margin-bottom: 1rem;
-    min-height: 2.8rem;
-}
-
-/* DESPLEGABLE LEER MÁS */
-
-.card details {
-    border-top: 1px solid #e0ccb0;
-    padding-top: .8rem;
-    margin-top: .8rem;
-}
-
-.card summary {
-    display: inline-block;
-    list-style: none;
-    cursor: pointer;
-    padding: 8px 14px;
-    border: 1px solid #c8a985;
-    border-radius: 30px;
-    background: #f5e5cf;
-    color: #70472e;
-    font-size: .78rem;
-    font-weight: 600;
-    transition: background .2s;
-}
-
-.card summary::-webkit-details-marker {
-    display: none;
-}
-
-.card summary::after {
-    content: " ＋";
-}
-
-.card details[open] summary::after {
-    content: " −";
-}
-
-.card summary:hover {
-    background: #e7d0b1;
-}
-
-.details-text {
-    color: #6f5845;
-    font-size: .85rem;
-    line-height: 1.7;
-    padding-top: .8rem;
-}
-
-.details-text strong {
-    color: #4a3021;
-}
-
-/* BOTONES DE ENLACE */
-
-.link-button, .pending {
-    display: inline-block;
-    margin-top: 10px;
-    padding: 8px 14px;
-    border-radius: 30px;
-    font-size: .76rem;
-    font-weight: 600;
-    text-decoration: none !important;
-}
-
-.link-button {
-    color: #fff6e9 !important;
-    background: #65442f;
-}
-
-.link-button:hover {
-    background: #3f2a1e;
-}
-
-.pending {
-    border: 1px dashed #b89570;
-    color: #84664a;
-    background: #f2e3ce;
-}
-
-/* RESPONSIVO */
-
-@media (max-width: 900px) {
-    .hero-grid {
-        grid-template-columns: 1fr;
-        gap: 1.5rem;
-    }
-    .portrait-frame {
-        max-width: 260px;
-        margin: 0 auto;
-    }
-    .gallery {
-        grid-template-columns: 1fr;
-    }
-}
-</style>
-""", unsafe_allow_html=True)
-
-
-# ==========================================================
-# PORTADA PRINCIPAL (FOTO IZQUIERDA / TEXTO DERECHA)
-# ==========================================================
-
-foto_portada = cargar_foto(FOTO, "portrait")
-
-st.markdown(f"""
-<section class="hero">
-    <div class="hero-grid">
-        <div class="portrait-frame">
-            {foto_portada}
-            <div class="caption">TU NOMBRE · PORTAFOLIO II</div>
-        </div>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portafolio II | Interfaces Multimodales</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,400;0,500;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,400..700;1,9..40,400..700&family=Playfair+Display:ital,wght@0,400..800;1,400..800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        :root {
+            --dark-coffee: #38251d;
+            --coffee: #65442f;
+            --brown-accent: #916a49;
+            --beige-dark: #d5bea0;
+            --beige-light: #ead7bb;
+            --cream-bg: #fff8ec;
+            --cream-card: #fffaf0;
+            --ink-text: #402d21;
+            --terracotta: #a8583b;
+        }
+
+        body {
+            background:
+                radial-gradient(ellipse at 10% 10%, #fff9e9, transparent 40%),
+                linear-gradient(135deg, #e4ceb0, #f6ead7 50%, #dfc4a0);
+            font-family: 'DM Sans', sans-serif;
+            color: var(--ink-text);
+            min-height: 100vh;
+        }
+
+        h1, h2, h3, .font-serif-custom {
+            font-family: 'Playfair Display', serif;
+            color: var(--dark-coffee);
+        }
+
+        .font-mono-custom { font-family: 'DM Mono', monospace; }
+
+        .sidebar {
+            background: linear-gradient(170deg, #493025, #302019);
+            color: #f8e9d2;
+        }
+
+        .vintage-divider {
+            border: none;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #98704e 20%, #e0c49e 50%, #98704e 80%, transparent);
+            margin: 2.5rem 0;
+        }
+
+        .hero-box {
+            background: linear-gradient(125deg, #fff9ed, #ead6b8);
+            border: 1px solid #d2b99a;
+            box-shadow: 0 18px 42px rgba(87, 58, 38, 0.12);
+        }
+
+        .portrait-frame {
+            background: #fffaf0;
+            box-shadow: 8px 12px 0 rgba(105, 72, 43, 0.12), 0 15px 30px rgba(64, 41, 25, 0.15);
+            transform: rotate(-2.5deg);
+            transition: transform 0.4s ease;
+        }
+        .portrait-frame:hover { transform: rotate(0deg) scale(1.02); }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 2.5rem;
+            align-items: start;
+        }
+        @media (max-width: 868px) {
+            .gallery-grid { grid-template-columns: 1fr; gap: 1.8rem; }
+        }
+
+        .polaroid-card {
+            background: linear-gradient(145deg, #fffaf0, #f2e4cf);
+            border: 2px solid #dcd0be;
+            border-radius: 14px;
+            padding: 16px 16px 20px;
+            box-shadow: 0 10px 22px rgba(56, 37, 29, 0.1);
+            transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1),
+                        border-color 0.35s ease,
+                        box-shadow 0.35s ease,
+                        background-color 0.35s ease;
+            position: relative;
+            isolation: isolate;
+        }
+        .polaroid-card:nth-child(2n+1) { transform: rotate(-0.5deg); }
+        .polaroid-card:nth-child(2n) { transform: rotate(0.5deg); }
+
+        .polaroid-card:hover,
+        .polaroid-card:focus-within {
+            z-index: 20;
+            transform: translateY(-8px) scale(1.035) rotate(0deg) !important;
+            border-color: #65442f !important;
+            background: #ffffff;
+            box-shadow: 0 24px 40px rgba(56, 37, 29, 0.22), 0 0 0 3px rgba(101, 68, 47, 0.25);
+        }
+
+        .polaroid-img-wrapper {
+            width: 100%;
+            height: 250px;
+            overflow: hidden;
+            border-radius: 8px;
+            border: 1px solid rgba(101, 68, 47, 0.15);
+            background-color: #e8d7c1;
+            position: relative;
+        }
+        .polaroid-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: grayscale(0.85) contrast(0.95);
+            transition: filter 0.4s ease, transform 0.4s ease;
+        }
+        .polaroid-card:hover .polaroid-img {
+            filter: grayscale(0.15) contrast(1);
+            transform: scale(1.03);
+        }
+
+        .btn-vintage {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            transition: all 0.25s ease;
+            cursor: pointer;
+            user-select: none;
+        }
+        .btn-read-more { background-color: #ebd8bf; color: #523724; border: 1px solid #c5aa8a; }
+        .btn-read-more:hover { background-color: #dfc3a1; color: #38251d; }
+        .btn-link { background-color: #65442f; color: #fff8ec; border: 1px solid #4a3121; }
+        .btn-link:hover { background-color: #38251d; color: #ffffff; box-shadow: 0 4px 10px rgba(56, 37, 29, 0.25); }
+
+        .expandable-content {
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+            transition: max-height 0.4s cubic-bezier(0, 1, 0, 1), opacity 0.3s ease, margin-top 0.3s ease;
+        }
+        .expandable-content.open {
+            max-height: 400px;
+            opacity: 1;
+            margin-top: 14px;
+            transition: max-height 0.5s cubic-bezier(1, 0, 1, 0), opacity 0.4s ease, margin-top 0.3s ease;
+        }
+
+        .img-fallback {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(45deg, #f2e2cb, #f2e2cb 10px, #ead7bb 10px, #ead7bb 12px);
+            color: #725942;
+            text-align: center;
+        }
+    </style>
+</head>
+<body class="flex flex-col md:flex-row min-h-screen">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar w-full md:w-72 p-6 flex-shrink-0 flex flex-col justify-between border-r border-[#65442f]/30">
         <div>
-            <div class="eyebrow">Cuaderno digital · Semestre II · Edición 02</div>
-            <h1>Interfaces<br><em>multimodales.</em></h1>
-            <div class="hero-copy">
-                Hola, soy <strong>Tu nombre aquí</strong>. Este espacio reúne mis experiencias, 
-                experimentos y aprendizajes de la segunda parte del semestre. Aprender haciendo, 
-                experimentar sin miedo y transformar ideas en experiencias interactivas.
+            <div class="mb-8">
+                <h1 class="text-2xl font-bold text-[#f8e9d2] mb-1 font-serif-custom" style="color:#f8e9d2">Archivo Creativo</h1>
+                <p class="font-mono-custom text-xs tracking-wider text-[#d5bea0] uppercase">Portafolio · Segunda Etapa</p>
             </div>
-            <div class="tags">
-                <span class="tag">✳ Diseño interactivo</span>
-                <span class="tag">⌘ Experimentación</span>
-                <span class="tag">↗ Aprender haciendo</span>
-                <span class="tag">☕ Edición vintage</span>
+            <p class="text-sm text-[#dfc8ae] leading-relaxed mb-6 font-sans">
+                Una colección de actividades, recursos y pruebas de clase. Esta versión utiliza contenido provisional preparado para previsualización.
+            </p>
+            <div class="vintage-divider my-4"></div>
+            <div class="space-y-3">
+                <h3 class="font-serif-custom text-lg text-[#f8e9d2] mb-2" style="color:#f8e9d2">Dentro del cuaderno</h3>
+                <ul class="space-y-2 text-sm text-[#e8d5bf] font-sans">
+                    <li class="flex items-center gap-2 hover:text-white transition-colors cursor-pointer"><span class="text-[#c7a47e]">✎</span> Dibujo y reconocimiento</li>
+                    <li class="flex items-center gap-2 hover:text-white transition-colors cursor-pointer"><span class="text-[#c7a47e]">◉</span> Sensores y simulación</li>
+                    <li class="flex items-center gap-2 hover:text-white transition-colors cursor-pointer"><span class="text-[#c7a47e]">⌘</span> Herramientas tecnológicas</li>
+                    <li class="flex items-center gap-2 hover:text-white transition-colors cursor-pointer"><span class="text-[#c7a47e]">↗</span> Repositorios y proyectos</li>
+                    <li class="flex items-center gap-2 hover:text-white transition-colors cursor-pointer"><span class="text-[#c7a47e]">✧</span> Reflexiones</li>
+                </ul>
             </div>
         </div>
-    </div>
-</section>
-""", unsafe_allow_html=True)
-
-
-# ==========================================================
-# BARRA LATERAL
-# ==========================================================
-
-with st.sidebar:
-    st.markdown("# Archivo creativo")
-    st.markdown("**PORTAFOLIO · SEGUNDA ETAPA**")
-    st.write("Una colección de actividades, recursos y pruebas de clase.")
-    st.markdown("---")
-    st.markdown("### Dentro del cuaderno")
-    st.markdown("""
-    - ✎ Dibujo y reconocimiento
-    - ◉ Sensores y simulación
-    - ⌘ Herramientas tecnológicas
-    - ↗ Repositorios y proyectos
-    - ✧ Reflexiones
-    """)
-    st.markdown("---")
-    st.caption("Plantilla para GitHub · Hecha con café y código.")
-
-
-# ==========================================================
-# LÍNEA DIVISORIA ESTÉTICA
-# ==========================================================
-
-st.markdown("<hr>", unsafe_allow_html=True)
-
-
-# ==========================================================
-# TÍTULO DE LA GALERÍA
-# ==========================================================
-
-st.markdown("""
-<div class="section-title">
-    <div class="eyebrow">Galería de procesos · 01—08</div>
-    <h2>Actividades prácticas realizadas</h2>
-    <p>Pasa el cursor sobre las Polaroids para ver el efecto y despliega los detalles de cada práctica.</p>
-</div>
-""", unsafe_allow_html=True)
-
-
-# ==========================================================
-# DATOS DE LAS 8 ACTIVIDADES
-# ==========================================================
-
-texto_lorem = "Descripción detallada provisional de la actividad práctica desarrollada en clase."
-aprendizaje_lorem = "Concepto clave, habilidad o reflexión obtenida en este ejercicio."
-
-actividades = [
-    {"titulo": "Actividad práctica uno", "categoria": "Práctica · 01", "resumen": "Primer acercamiento a interfaces y prototipado multimodal.", "descripcion": texto_lorem, "aprendizaje": aprendizaje_lorem, "url": "", "boton": "Abrir recurso"},
-    {"titulo": "Actividad práctica dos", "categoria": "Experimentación · 02", "resumen": "Pruebas de interacción con sensores y estímulos visuales.", "descripcion": texto_lorem, "aprendizaje": aprendizaje_lorem, "url": "", "boton": "Abrir recurso"},
-    {"titulo": "Actividad práctica tres", "categoria": "Interfaz · 03", "resumen": "Diseño de flujos de navegación orientados al usuario.", "descripcion": texto_lorem, "aprendizaje": aprendizaje_lorem, "url": "", "boton": "Abrir recurso"},
-    {"titulo": "Actividad práctica cuatro", "categoria": "Simulación · 04", "resumen": "Simulación de escenarios interactivos en entornos virtuales.", "descripcion": texto_lorem, "aprendizaje": aprendizaje_lorem, "url": "", "boton": "Abrir recurso"},
-    {"titulo": "Actividad práctica cinco", "categoria": "Tecnología · 05", "resumen": "Implementación de herramientas tecnológicas avanzadas.", "descripcion": texto_lorem, "aprendizaje": aprendizaje_lorem, "url": "", "boton": "Abrir recurso"},
-    {"titulo": "Actividad práctica seis", "categoria": "Desarrollo · 06", "resumen": "Construcción de componentes dinámicos y adaptativos.", "descripcion": texto_lorem, "aprendizaje": aprendizaje_lorem, "url": "", "boton": "Abrir recurso"},
-    {"titulo": "Actividad práctica siete", "categoria": "Evaluación · 07", "resumen": "Pruebas de usabilidad y análisis de retroalimentación.", "descripcion": texto_lorem, "aprendizaje": aprendizaje_lorem, "url": "", "boton": "Abrir recurso"},
-    {"titulo": "Actividad práctica ocho", "categoria": "Proyecto Final · 08", "resumen": "Consolidación de aprendizajes del portafolio multimodal.", "descripcion": texto_lorem, "aprendizaje": aprendizaje_lorem, "url": "", "boton": "Abrir recurso"},
-]
-
-
-# ==========================================================
-# FUNCIÓN PARA CREAR CADA TARJETA
-# ==========================================================
-
-def tarjeta(actividad, numero):
-    foto = cargar_foto(FOTO, "polaroid")
-    boton = crear_enlace(actividad["url"], actividad["boton"])
-
-    return f"""
-    <article class="card">
-        {foto}
-        <div class="meta">
-            <span>{esc(actividad["categoria"])}</span>
-            <span class="number">{numero:02d}</span>
+        <div class="mt-8 pt-4 border-t border-[#65442f]/40 font-mono-custom text-xs text-[#b89c7d]">
+            Plantilla de prueba · Hecha con curiosidad y café ☕
         </div>
-        <h3>{esc(actividad["titulo"])}</h3>
-        <div class="summary">
-            {esc(actividad["resumen"])}
-        </div>
-        <details>
-            <summary>Leer más información</summary>
-            <div class="details-text">
-                <p>{esc(actividad["descripcion"])}</p>
-                <p>
-                    <strong>Lo que me llevo:</strong>
-                    {esc(actividad["aprendizaje"])}
-                </p>
-                {boton}
+    </aside>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="flex-1 p-4 md:p-10 max-w-[1600px] mx-auto w-full transition-all duration-300">
+
+        <!-- HERO -->
+        <section class="hero-box rounded-2xl p-6 md:p-8 relative mb-8">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                <div class="lg:col-span-4 flex justify-center lg:justify-start">
+                    <div class="portrait-frame p-3 pb-4 max-w-[320px] w-full rounded-sm">
+                        <div class="w-full h-48 md:h-52 bg-[#e2d1b8] rounded overflow-hidden">
+                            <img src="blanco.jpeg"
+                                 onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'img-fallback\'><span class=\'text-2xl\'>✦</span><strong class=\'text-xs mt-1\'>Fotografía de prueba</strong><small class=\'text-[10px] opacity-75 font-mono-custom\'>blanco.jpeg</small></div>';"
+                                 alt="Fotografía de portada"
+                                 class="w-full h-full object-cover filter grayscale contrast-95">
+                        </div>
+                        <div class="text-center mt-3 font-mono-custom text-xs text-[#79583e] tracking-wider uppercase font-semibold">
+                            TU NOMBRE · PORTAFOLIO II
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-8 space-y-4">
+                    <div class="font-mono-custom text-xs tracking-widest text-[#8d5b3d] uppercase">
+                        Cuaderno digital · Semestre II · Edición 02
+                    </div>
+                    <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
+                        Interfaces<br>
+                        <span class="italic text-[#8d5b3d]">multimodales.</span>
+                    </h1>
+                    <div class="text-base md:text-lg text-[#65442f] leading-relaxed max-w-3xl">
+                        Hola, soy <strong>Tu Nombre Aquí</strong>. Este espacio reúne mis experiencias, experimentos y aprendizajes de la segunda parte del semestre.
+                        <br><br>
+                        Aprender haciendo, experimentar sin miedo y transformar ideas en experiencias interactivas y multimodales.
+                    </div>
+                    <div class="flex flex-wrap gap-2 pt-2">
+                        <span class="px-3 py-1 bg-[#fff9ef] border border-[#cdb393] rounded-full text-xs font-mono-custom text-[#694a32]">✳ Diseño interactivo</span>
+                        <span class="px-3 py-1 bg-[#fff9ef] border border-[#cdb393] rounded-full text-xs font-mono-custom text-[#694a32]">⌘ Experimentación</span>
+                        <span class="px-3 py-1 bg-[#fff9ef] border border-[#cdb393] rounded-full text-xs font-mono-custom text-[#694a32]">↗ Aprender haciendo</span>
+                        <span class="px-3 py-1 bg-[#fff9ef] border border-[#cdb393] rounded-full text-xs font-mono-custom text-[#694a32]">☕ Edición vintage</span>
+                    </div>
+                </div>
             </div>
-        </details>
-    </article>
-    """
+        </section>
 
+        <hr class="vintage-divider">
 
-# ==========================================================
-# CONSTRUIR Y MOSTRAR LA GALERÍA (2 COLUMNAS)
-# ==========================================================
+        <div class="mb-8">
+            <div class="font-mono-custom text-xs tracking-widest text-[#8d5b3d] uppercase mb-1">Galería de procesos · 01—08</div>
+            <h2 class="text-3xl md:text-4xl font-bold text-[#38251d]">Actividades prácticas realizadas</h2>
+            <p class="text-sm text-[#725942] mt-2">
+                Pasa el cursor sobre las tarjetas Polaroid para ampliarlas. Usa el botón «Leer más» para desplegar la descripción detallada o «Abrir recurso» para ir al enlace.
+            </p>
+        </div>
 
-galeria = "".join(
-    tarjeta(actividad, numero)
-    for numero, actividad in enumerate(actividades, start=1)
-)
+        <div class="gallery-grid" id="cardsContainer"></div>
 
-st.markdown(f'<div class="gallery">{galeria}</div>', unsafe_allow_html=True)
+        <div class="mt-12 p-4 border border-[#d2b895] rounded-xl bg-[#fff9ee]/70 text-sm text-[#765a43] flex items-center gap-3">
+            <span class="text-xl">✦</span>
+            <div>
+                <strong>Modo plantilla demostrativa:</strong> Galería configurada con exactamente 8 cards de actividades. Los botones están listos para vincular tus proyectos finales.
+            </div>
+        </div>
 
+        <footer class="mt-10 mb-6 text-center text-xs font-mono-custom text-[#80654d] tracking-widest uppercase">
+            Fin de la página, no del proceso · Diseñado con curiosidad
+        </footer>
+    </main>
 
-# ==========================================================
-# PIE DE PÁGINA
-# ==========================================================
+    <script>
+        // ============================================================
+        // EDITA AQUÍ: cambia titulo, resumen, descripcion, aprendizaje y url
+        // de cada actividad cuando tengas tus contenidos reales.
+        // ============================================================
+        const actividades = [
+            { id: 1, titulo: "Actividad 01: Reconocimiento Interactivo", categoria: "Práctica · 01",
+              resumen: "Experimentación con lienzo digital y detección de patrones de dibujo libre.",
+              descripcion: "En esta actividad se desarrolló una interfaz interactiva capaz de procesar trazos de dibujo en tiempo real. Se evaluaron respuestas visuales y retroalimentación auditiva suave al usuario.",
+              aprendizaje: "Lógica de captura de coordenadas en Canvas y optimización de eventos de ratón.",
+              url: "https://github.com", botonTexto: "Abrir recurso" },
+            { id: 2, titulo: "Actividad 02: Simulación Multimodal", categoria: "Experimentación · 02",
+              resumen: "Visualización de entrada de datos continuos simulando sensores de movimiento.",
+              descripcion: "Implementación de dashboards de monitoreo con estética analógica donde los valores varían suavemente generando gráficos de respuesta rápida.",
+              aprendizaje: "Manejo de estado asíncrono y mapeo de variables continuas.",
+              url: "https://github.com", botonTexto: "Abrir recurso" },
+            { id: 3, titulo: "Actividad 03: Interfaces Accesibles", categoria: "Interfaz · 03",
+              resumen: "Integración de componentes de interacción por voz e imagen en una sola vista.",
+              descripcion: "Exploración de prototipos centrados en la accesibilidad multimodal, permitiendo alternar entre interacción táctil y comandos de audio.",
+              aprendizaje: "Diseño inclusivo y jerarquización de canales de entrada.",
+              url: "https://github.com", botonTexto: "Abrir recurso" },
+            { id: 4, titulo: "Actividad 04: Renderizado Espacial 3D", categoria: "Simulación · 04",
+              resumen: "Pruebas de renderizado y manipulación de objetos tridimensionales.",
+              descripcion: "Uso de canvas para construir un entorno miniatura interactivo con respuestas de iluminación física simulada.",
+              aprendizaje: "Control de cámaras interactivas y transformaciones espaciales.",
+              url: "https://github.com", botonTexto: "Abrir recurso" },
+            { id: 5, titulo: "Actividad 05: Procesamiento de Imagen", categoria: "Tecnología · 05",
+              resumen: "Procesamiento en blanco y negro para clasificación de bordes visuales.",
+              descripcion: "Desarrollo de un pipeline para analizar imágenes cargadas localmente (usando blanco.jpeg como referencia por defecto) y aplicar matriz de contraste.",
+              aprendizaje: "Filtros de imagen mediante CSS/Canvas y matriz de convolución.",
+              url: "https://github.com", botonTexto: "Abrir recurso" },
+            { id: 6, titulo: "Actividad 06: Ergonomía y Estética Vintage", categoria: "Aprendizaje · 06",
+              resumen: "Análisis de la estética retro y la ergonomía visual en la web moderna.",
+              descripcion: "Documentación sobre cómo la paleta de tonos cálidos (café, crema, beige) genera mayor descanso visual y una experiencia de usuario nostálgica.",
+              aprendizaje: "Armonía de color y tipografía de contraste Serif / Sans-Serif.",
+              url: "https://github.com", botonTexto: "Abrir recurso" },
+            { id: 7, titulo: "Actividad 07: Prototipado Físico y Sensores", categoria: "Hardware · 07",
+              resumen: "Conexión de señales analógicas para manipular la interfaz gráfica.",
+              descripcion: "Pruebas de comunicación serial recibiendo datos externos para transformar la opacidad y los tonos de la paleta en tiempo real.",
+              aprendizaje: "Manejo de Web Serial API y respuesta en bucle directo.",
+              url: "https://github.com", botonTexto: "Abrir recurso" },
+            { id: 8, titulo: "Actividad 08: Proyecto Integrador Final", categoria: "Proyecto · 08",
+              resumen: "Síntesis de los módulos trabajados durante el semestre en un único entorno.",
+              descripcion: "Unificación de todas las pruebas conceptuales y ejercicios de diseño en este portafolio multimodal de estética vintage.",
+              aprendizaje: "Estructuración limpia de código web monolítico y usabilidad.",
+              url: "https://github.com", botonTexto: "Abrir recurso" }
+        ];
 
-st.markdown("""
-<hr>
-<div style="padding: 16px; border: 1px solid #d2b895; border-radius: 14px; background: #fff9eea8; color: #765a43; text-align: center; font-size: 0.9rem;">
-    ✦ <strong>Modo demostración:</strong> Sube tu imagen como <code>Blanco.jpg</code> en el repositorio de GitHub junto a este archivo <code>app.py</code>.
-</div>
-""", unsafe_allow_html=True)
+        function renderCards() {
+            const container = document.getElementById('cardsContainer');
+            container.innerHTML = '';
+
+            actividades.forEach((item, index) => {
+                const card = document.createElement('article');
+                card.className = 'polaroid-card flex flex-col justify-between';
+
+                card.innerHTML = `
+                    <div>
+                        <div class="polaroid-img-wrapper mb-4">
+                            <img src="blanco.jpeg"
+                                 onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\\'img-fallback\\'><span class=\\'text-3xl\\'>✦</span><strong class=\\'text-sm mt-1\\'>Fotografía ${item.id}</strong><small class=\\'text-[11px] opacity-75 font-mono-custom\\'>blanco.jpeg</small></div>';"
+                                 alt="${item.titulo}"
+                                 class="polaroid-img">
+                        </div>
+
+                        <div class="flex justify-between items-center mb-2 font-mono-custom text-xs uppercase text-[#8d5b3d]">
+                            <span>${item.categoria}</span>
+                            <span class="w-7 h-7 rounded-full border border-[#d5b995] bg-[#f6e7d1] flex items-center justify-center font-bold text-xs">
+                                ${String(index + 1).padStart(2, '0')}
+                            </span>
+                        </div>
+
+                        <h3 class="font-serif-custom font-bold text-2xl leading-snug mb-2 text-[#38251d]">${item.titulo}</h3>
+                        <p class="text-sm text-[#725942] leading-relaxed mb-3">${item.resumen}</p>
+
+                        <div id="expand-${item.id}" class="expandable-content border-t border-[#e0ccb0] pt-3 text-xs md:text-sm text-[#614a37] space-y-2">
+                            <p>${item.descripcion}</p>
+                            <div class="bg-[#f5e9d6] p-3 rounded-lg border border-[#e2d0b5]">
+                                <strong class="text-[#38251d] block mb-0.5">Lo que me llevo:</strong>
+                                ${item.aprendizaje}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between gap-3 mt-5 pt-3 border-t border-[#ebd8bf]/70">
+                        <button onclick="toggleExpand(${item.id})" class="btn-vintage btn-read-more">
+                            <span id="btn-text-${item.id}">Leer más</span>
+                        </button>
+                        <a href="${item.url}" target="_blank" rel="noopener noreferrer" class="btn-vintage btn-link">
+                            ↗ ${item.botonTexto}
+                        </a>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function toggleExpand(id) {
+            const content = document.getElementById(`expand-${id}`);
+            const btnText = document.getElementById(`btn-text-${id}`);
+            const isOpen = content.classList.contains('open');
+            content.classList.toggle('open', !isOpen);
+            btnText.textContent = isOpen ? "Leer más" : "Ver menos";
+        }
+
+        window.addEventListener('DOMContentLoaded', renderCards);
+    </script>
+</body>
+</html>
