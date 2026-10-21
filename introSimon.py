@@ -1,4 +1,6 @@
 import base64
+import mimetypes
+import re
 from pathlib import Path
 
 import streamlit as st
@@ -391,7 +393,7 @@ HTML = r"""<!DOCTYPE html>
                 <div class="lg:col-span-4 flex justify-center lg:justify-start">
                     <div class="portrait-frame p-3 pb-4 max-w-[320px] w-full rounded-sm">
                         <div class="w-full h-48 md:h-52 bg-[#e2d1b8] rounded overflow-hidden">
-                            <img src="Simon.jpeg"
+                            <img id="foto-portada" src="Simon.jpeg"
                                  onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'img-fallback\'><span class=\'text-2xl\'>✦</span><strong class=\'text-xs mt-1\'>Fotografía de prueba</strong><small class=\'text-[10px] opacity-75 font-mono-custom\'>Simon.jpeg</small></div>';"
                                  alt="Fotografía de portada"
                                  class="w-full h-full object-cover filter grayscale contrast-95">
@@ -619,6 +621,9 @@ HTML = r"""<!DOCTYPE html>
             setTimeout(actualizar, 400);
         }
 
+        // Imagen de las tarjetas: la misma Simon.jpeg de la portada (ya incrustada, así no se duplica)
+        const FOTO = (document.getElementById('foto-portada') || {}).src || 'Simon.jpeg';
+
         function renderCards() {
             const container = document.getElementById('cardsContainer');
             container.innerHTML = '';
@@ -632,8 +637,8 @@ HTML = r"""<!DOCTYPE html>
                 card.innerHTML = `
                     <div>
                         <div class="polaroid-img-wrapper mb-4">
-                            <img src="blanco.jpeg"
-                                 onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\\'img-fallback\\'><span class=\\'text-3xl\\'>✦</span><strong class=\\'text-sm mt-1\\'>Fotografía ${item.id}</strong><small class=\\'text-[11px] opacity-75 font-mono-custom\\'>blanco.jpeg</small></div>';"
+                            <img src="${FOTO}"
+                                 onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\\'img-fallback\\'><span class=\\'text-3xl\\'>✦</span><strong class=\\'text-sm mt-1\\'>Fotografía ${item.id}</strong><small class=\\'text-[11px] opacity-75 font-mono-custom\\'>Simon.jpeg</small></div>';"
                                  alt="${item.titulo}"
                                  class="polaroid-img">
                         </div>
@@ -702,21 +707,40 @@ HTML = r"""<!DOCTYPE html>
 </html>
 """
 
-import re
-import mimetypes
+# ---------- Incrusta las imágenes locales (Simon.jpeg, etc.) dentro del HTML ----------
+# Dentro del iframe de Streamlit las rutas relativas no cargan, por eso se convierten a base64.
+EXTENSIONES = {".jpg", ".jpeg", ".png", ".webp", ".gif"}
+
+
+def buscar_imagen(nombre):
+    """Busca el archivo junto a app.py sin distinguir mayúsculas.
+    Si no encuentra el nombre exacto, acepta el mismo nombre con otra extensión
+    (por ejemplo Simon.jpeg -> simon.jpg)."""
+    carpeta = Path(__file__).parent
+    archivos = [f for f in carpeta.iterdir() if f.is_file() and f.suffix.lower() in EXTENSIONES]
+    for f in archivos:
+        if f.name.lower() == nombre.lower():
+            return f
+    base = Path(nombre).stem.lower()
+    for f in archivos:
+        if f.stem.lower() == base:
+            return f
+    return None
+
 
 def incrustar_imagenes(html):
-    carpeta = Path(__file__).parent
-
     def reemplazo(m):
-        nombre = m.group(1)
-        for f in carpeta.iterdir():
-            if f.name.lower() == nombre.lower():  # no distingue mayúsculas
-                mime = mimetypes.guess_type(f.name)[0] or "image/jpeg"
-                b64 = base64.b64encode(f.read_bytes()).decode()
-                return f'src="data:{mime};base64,{b64}"'
-        return m.group(0)  # si no existe, se muestra el recuadro de respaldo
+        f = buscar_imagen(m.group(1))
+        if f is None:
+            return m.group(0)  # si no existe, se muestra el recuadro de respaldo
+        mime = mimetypes.guess_type(f.name)[0] or "image/jpeg"
+        b64 = base64.b64encode(f.read_bytes()).decode()
+        return f'src="data:{mime};base64,{b64}"'
 
     return re.sub(r'src="([^"/:]+\.(?:jpe?g|png|webp|gif))"', reemplazo, html, flags=re.I)
 
+
 HTML = incrustar_imagenes(HTML)
+
+# La altura se ajusta sola al contenido (JavaScript), así solo existe el scroll del navegador.
+components.html(HTML, height=3000, scrolling=False)
