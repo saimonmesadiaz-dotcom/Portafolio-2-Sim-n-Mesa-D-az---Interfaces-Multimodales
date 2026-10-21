@@ -654,5 +654,3 @@ st.markdown("""
     FIN DE LA PÁGINA, NO DEL PROCESO · DISEÑADO CON CURIOSIDAD ☕
 </div>
 """, unsafe_allow_html=True)
-</div>
-""", unsafe_allow_html=True)
