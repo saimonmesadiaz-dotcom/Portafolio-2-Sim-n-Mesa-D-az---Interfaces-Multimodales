@@ -4,22 +4,96 @@ from pathlib import Path
 import streamlit as st
 import streamlit.components.v1 as components
 
-st.set_page_config(page_title="Portafolio II | Interfaces Multimodales", layout="wide")
+st.set_page_config(
+    page_title="Portafolio II | Interfaces Multimodales",
+    layout="wide",
+    initial_sidebar_state="expanded",
+)
 
-# Quita márgenes y cabecera de Streamlit
+# ---------- Estilos de la página y de la barra lateral nativa de Streamlit ----------
 st.markdown(
     """
     <style>
+      @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;700&family=Playfair+Display:wght@400;700&display=swap');
+
+      /* Página limpia, sin márgenes */
       header, footer, #MainMenu {visibility: hidden;}
       .block-container {padding: 0 !important; max-width: 100% !important;}
       iframe {display: block;}
+      .stApp {background: #ecdcc0;}
+
+      /* La flechita para mostrar/ocultar la barra lateral siempre visible */
+      [data-testid="stSidebarCollapsedControl"],
+      [data-testid="stSidebarCollapsedControl"] *,
+      [data-testid="stExpandSidebarButton"],
+      [data-testid="stExpandSidebarButton"] * {visibility: visible !important;}
+      [data-testid="stSidebarCollapsedControl"] button,
+      [data-testid="stExpandSidebarButton"] {
+        color: #65442f !important; background: #f6e7d1 !important;
+        border: 1px solid #c5aa8a !important; border-radius: 999px !important;
+      }
+      [data-testid="stSidebarCollapseButton"] button,
+      [data-testid="stSidebarCollapseButton"] svg,
+      [data-testid="stSidebarHeader"] button {color: #e8d5bf !important;}
+
+      /* Barra lateral fija, café vintage */
+      section[data-testid="stSidebar"] {
+        background: linear-gradient(170deg, #493025, #302019) !important;
+        border-right: 1px solid rgba(101, 68, 47, .35);
+      }
+      section[data-testid="stSidebar"][aria-expanded="true"] {
+        min-width: 290px !important; max-width: 290px !important; width: 290px !important;
+      }
+      [data-testid="stSidebarHeader"] {padding-bottom: 0 !important;}
+
+      .pf-side {font-family: 'DM Sans', sans-serif; color: #f8e9d2; padding: 0 .4rem 1rem;}
+      .pf-star {font-size: 30px; line-height: 1; color: #e8c27a; display: inline-block;
+                animation: pf-twinkle 3.2s ease-in-out infinite;}
+      .pf-title {font-family: 'Playfair Display', serif; font-size: 1.7rem; font-weight: 700;
+                 color: #f8e9d2; line-height: 1.15; margin: .3rem 0 .3rem;}
+      .pf-sub {font-family: 'DM Mono', monospace; font-size: .72rem; letter-spacing: .14em;
+               text-transform: uppercase; color: #d5bea0; margin-bottom: 1.2rem;}
+      .pf-desc {font-size: .88rem; line-height: 1.65; color: #dfc8ae; margin-bottom: 1rem;}
+      .pf-div {height: 1px; margin: 1.2rem 0;
+               background: linear-gradient(90deg, transparent, #98704e 20%, #e0c49e 50%, #98704e 80%, transparent);}
+      .pf-h {font-family: 'Playfair Display', serif; font-size: 1.2rem; color: #f8e9d2; margin-bottom: .7rem;}
+      .nav-item {display: flex; align-items: center; gap: .6rem; padding: .35rem 0; cursor: pointer;
+                 font-size: .9rem; color: #e8d5bf; transition: transform .25s ease, color .25s ease;}
+      .nav-item span {display: inline-block; color: #c7a47e; transition: transform .4s ease, color .3s;}
+      .nav-item:hover {transform: translateX(7px); color: #ffffff;}
+      .nav-item:hover span {transform: rotate(180deg) scale(1.35); color: #e8c27a;}
+      .pf-foot {margin-top: 1.6rem; padding-top: 1rem; border-top: 1px solid rgba(101, 68, 47, .5);
+                font-family: 'DM Mono', monospace; font-size: .72rem; color: #b89c7d;}
+      @keyframes pf-twinkle {
+        0%, 100% {transform: scale(1) rotate(0deg); opacity: .95;}
+        50% {transform: scale(1.35) rotate(90deg); opacity: .6;}
+      }
     </style>
     """,
     unsafe_allow_html=True,
 )
 
+# ---------- Barra lateral (fija; se oculta y se muestra con la flechita) ----------
+SIDEBAR_HTML = """
+<div class="pf-side">
+<div class="pf-star">✦</div>
+<div class="pf-title">Archivo Creativo</div>
+<div class="pf-sub">Portafolio · Segunda etapa</div>
+<div class="pf-desc">Una colección de experimentos donde la voz, el gesto, el tacto y la imagen se combinan para crear formas más naturales de dialogar con la tecnología.</div>
+<div class="pf-div"></div>
+<div class="pf-h">Dentro del cuaderno</div>
+<div class="nav-item" data-target="card-1"><span>✎</span> Dibujo y reconocimiento</div>
+<div class="nav-item" data-target="card-2"><span>◉</span> Sensores y simulación</div>
+<div class="nav-item" data-target="card-5"><span>⌘</span> Herramientas tecnológicas</div>
+<div class="nav-item" data-target="card-8"><span>↗</span> Repositorios y proyectos</div>
+<div class="nav-item" data-target="reflexiones"><span>✧</span> Reflexiones</div>
+<div class="pf-foot">Voz · Gesto · Tacto · Imagen · Sonido</div>
+</div>
+"""
+st.sidebar.markdown(SIDEBAR_HTML, unsafe_allow_html=True)
+
 # ============================================================
-# HTML DEL PORTAFOLIO
+# HTML DEL PORTAFOLIO (portada + galería)
 # Para editar actividades: busca "const actividades" más abajo.
 # ============================================================
 HTML = r"""<!DOCTYPE html>
@@ -89,11 +163,14 @@ HTML = r"""<!DOCTYPE html>
 
         .gallery-grid {
             display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 2.5rem;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 2.2rem 1.8rem;
             align-items: start;
         }
-        @media (max-width: 868px) {
+        @media (max-width: 1100px) {
+            .gallery-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        }
+        @media (max-width: 640px) {
             .gallery-grid { grid-template-columns: 1fr; gap: 1.8rem; }
         }
 
@@ -124,7 +201,7 @@ HTML = r"""<!DOCTYPE html>
 
         .polaroid-img-wrapper {
             width: 100%;
-            height: 250px;
+            height: 200px;
             overflow: hidden;
             border-radius: 8px;
             border: 1px solid rgba(101, 68, 47, 0.15);
@@ -167,7 +244,7 @@ HTML = r"""<!DOCTYPE html>
             transition: max-height 0.4s cubic-bezier(0, 1, 0, 1), opacity 0.3s ease, margin-top 0.3s ease;
         }
         .expandable-content.open {
-            max-height: 400px;
+            max-height: 560px;
             opacity: 1;
             margin-top: 14px;
             transition: max-height 0.5s cubic-bezier(1, 0, 1, 0), opacity 0.4s ease, margin-top 0.3s ease;
@@ -267,11 +344,6 @@ HTML = r"""<!DOCTYPE html>
         }
 
 
-        /* Menú lateral con vida */
-        .nav-item { transition: transform .25s ease, color .25s ease; }
-        .nav-item:hover { transform: translateX(7px); color: #fff; }
-        .nav-item span { display: inline-block; transition: transform .4s ease, color .3s; }
-        .nav-item:hover span { transform: rotate(180deg) scale(1.35); color: #e8c27a; }
 
         /* Estrellitas a los extremos del título */
         .title-star {
@@ -307,33 +379,6 @@ HTML = r"""<!DOCTYPE html>
     </style>
 </head>
 <body class="flex flex-col md:flex-row">
-
-    <!-- SIDEBAR -->
-    <aside class="sidebar w-full md:w-72 p-6 flex-shrink-0 flex flex-col justify-between border-r border-[#65442f]/30">
-        <div>
-            <div class="mb-8">
-                <h1 class="text-2xl font-bold text-[#f8e9d2] mb-1 font-serif-custom" style="color:#f8e9d2">Archivo Creativo</h1>
-                <p class="font-mono-custom text-xs tracking-wider text-[#d5bea0] uppercase">Portafolio · Segunda Etapa</p>
-            </div>
-            <p class="text-sm text-[#dfc8ae] leading-relaxed mb-6 font-sans">
-                Una colección de experimentos donde la voz, el gesto, el tacto y la imagen se combinan para crear formas más naturales de dialogar con la tecnología.
-            </p>
-            <div class="vintage-divider my-4"></div>
-            <div class="space-y-3">
-                <h3 class="font-serif-custom text-lg text-[#f8e9d2] mb-2" style="color:#f8e9d2">Dentro del cuaderno</h3>
-                <ul class="space-y-2 text-sm text-[#e8d5bf] font-sans">
-                    <li data-target="card-1" class="nav-item flex items-center gap-2 cursor-pointer"><span class="text-[#c7a47e]">✎</span> Dibujo y reconocimiento</li>
-                    <li data-target="card-2" class="nav-item flex items-center gap-2 cursor-pointer"><span class="text-[#c7a47e]">◉</span> Sensores y simulación</li>
-                    <li data-target="card-5" class="nav-item flex items-center gap-2 cursor-pointer"><span class="text-[#c7a47e]">⌘</span> Herramientas tecnológicas</li>
-                    <li data-target="card-8" class="nav-item flex items-center gap-2 cursor-pointer"><span class="text-[#c7a47e]">↗</span> Repositorios y proyectos</li>
-                    <li data-target="reflexiones" class="nav-item flex items-center gap-2 cursor-pointer"><span class="text-[#c7a47e]">✧</span> Reflexiones</li>
-                </ul>
-            </div>
-        </div>
-        <div class="mt-8 pt-4 border-t border-[#65442f]/40 font-mono-custom text-xs text-[#b89c7d]">
-            Voz · Gesto · Tacto · Imagen · Sonido
-        </div>
-    </aside>
 
     <!-- CONTENIDO PRINCIPAL -->
     <main class="flex-1 p-4 md:p-10 max-w-[1600px] mx-auto w-full transition-all duration-300">
@@ -518,6 +563,65 @@ HTML = r"""<!DOCTYPE html>
             } catch (e) {}
         }
 
+
+        // Conecta esta página con la de Streamlit: clics del menú lateral y barra de progreso fija
+        function conectarConPaginaPadre() {
+            let P, pdoc;
+            try { P = window.parent; pdoc = P.document; void pdoc.body; } catch (e) { return; }
+            if (!P || P === window || !window.frameElement) return;
+
+            try { if (P.__pfCleanup) P.__pfCleanup(); } catch (e) {}
+
+            function findScroller() {
+                let el = window.frameElement.parentElement;
+                while (el && el !== pdoc.body && el !== pdoc.documentElement) {
+                    const oy = P.getComputedStyle(el).overflowY;
+                    if ((oy === 'auto' || oy === 'scroll') && el.scrollHeight > el.clientHeight + 1) return el;
+                    el = el.parentElement;
+                }
+                return pdoc.scrollingElement || pdoc.documentElement;
+            }
+
+            // Barra de progreso fija en todo el ancho del navegador
+            const bar = pdoc.createElement('div');
+            bar.id = 'pf-progress';
+            bar.style.cssText = 'position:fixed;top:0;left:0;height:5px;width:0;z-index:2147483000;pointer-events:none;' +
+                'background:linear-gradient(90deg,#a8583b,#d9a441,#e8c27a);box-shadow:0 0 10px rgba(217,164,65,.7);transition:width .08s linear;';
+            pdoc.body.appendChild(bar);
+
+            function actualizar() {
+                const sc = findScroller();
+                const max = sc.scrollHeight - sc.clientHeight;
+                bar.style.width = (max > 0 ? Math.min(100, (sc.scrollTop / max) * 100) : 0) + '%';
+            }
+            const onScroll = () => actualizar();
+            pdoc.addEventListener('scroll', onScroll, true);
+            P.addEventListener('resize', onScroll);
+
+            // Menú lateral (barra nativa de Streamlit): lleva a cada actividad
+            const onClick = (e) => {
+                const item = e.target && e.target.closest ? e.target.closest('.nav-item') : null;
+                if (!item) return;
+                const destino = document.getElementById(item.getAttribute('data-target'));
+                if (!destino) return;
+                const sc = findScroller();
+                const topFrame = window.frameElement.getBoundingClientRect().top;
+                const topDestino = destino.getBoundingClientRect().top;
+                const topScroller = sc === pdoc.scrollingElement ? 0 : sc.getBoundingClientRect().top;
+                sc.scrollTo({ top: sc.scrollTop + (topFrame - topScroller) + topDestino - P.innerHeight * 0.2, behavior: 'smooth' });
+            };
+            pdoc.addEventListener('click', onClick);
+
+            P.__pfCleanup = function () {
+                pdoc.removeEventListener('scroll', onScroll, true);
+                pdoc.removeEventListener('click', onClick);
+                P.removeEventListener('resize', onScroll);
+                if (bar.parentNode) bar.parentNode.removeChild(bar);
+            };
+            actualizar();
+            setTimeout(actualizar, 400);
+        }
+
         function renderCards() {
             const container = document.getElementById('cardsContainer');
             container.innerHTML = '';
@@ -544,7 +648,7 @@ HTML = r"""<!DOCTYPE html>
                             </span>
                         </div>
 
-                        <h3 class="font-serif-custom font-bold text-2xl leading-snug mb-2 text-[#38251d]">${item.titulo}</h3>
+                        <h3 class="font-serif-custom font-bold text-xl leading-snug mb-2 text-[#38251d]">${item.titulo}</h3>
                         <p class="text-sm text-[#725942] leading-relaxed mb-3">${item.resumen}</p>
 
                         <div id="expand-${item.id}" class="expandable-content border-t border-[#e0ccb0] pt-3 text-xs md:text-sm text-[#614a37] space-y-2">
@@ -586,13 +690,6 @@ HTML = r"""<!DOCTYPE html>
             const portrait = document.querySelector('.portrait-frame');
             if (portrait) attachSparkles(portrait);
 
-            // Menú lateral: desplazamiento suave a cada sección
-            document.querySelectorAll('.nav-item').forEach(li => {
-                li.addEventListener('click', () => {
-                    const target = document.getElementById(li.dataset.target);
-                    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                });
-            });
 
 
             // El iframe se estira al alto real del contenido: así solo existe la barra de scroll del navegador
@@ -601,6 +698,7 @@ HTML = r"""<!DOCTYPE html>
             window.addEventListener('load', fitFrame);
             window.addEventListener('resize', fitFrame);
             if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitFrame);
+            conectarConPaginaPadre();
         });
     </script>
 </body>
@@ -614,4 +712,5 @@ if img.exists():
     b64 = base64.b64encode(img.read_bytes()).decode()
     HTML = HTML.replace('src="blanco.jpeg"', f'src="data:image/jpeg;base64,{b64}"')
 
-components.html(HTML, height=3400, scrolling=False)
+# La altura se ajusta sola al contenido (JavaScript), así solo existe el scroll del navegador.
+components.html(HTML, height=3000, scrolling=False)
