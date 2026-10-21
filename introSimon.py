@@ -1,157 +1,106 @@
 
 import base64
 import html
-import mimetypes
 from pathlib import Path
 from urllib.parse import urlparse
 
 import streamlit as st
 
-# ======================================================
-# PORTAFOLIO II — CUADERNO DE EXPERIMENTOS
-# SIMÓN MESA DÍAZ | INTERFACES MULTIMODALES
-# ======================================================
+# ==================================================
+# PORTAFOLIO II - PLANTILLA VINTAGE
+# ==================================================
 
 st.set_page_config(
-    page_title="Cuaderno de Experimentos | Portafolio II",
+    page_title="Portafolio II | Interfaces Multimodales",
     page_icon="☕",
     layout="wide",
-    initial_sidebar_state="expanded",
 )
 
-BASE_DIR = Path(__file__).parent
+CARPETA = Path(__file__).resolve().parent
+FOTO = "blanco negro.jpg"
 
 
-# ======================================================
-# FUNCIONES AUXILIARES
-# ======================================================
+# ---------------- FUNCIONES ----------------
 
-def imagen_uri(nombre):
-    """Lee una imagen local y la convierte en una URL incrustada."""
-    ruta = BASE_DIR / nombre
-
-    if not ruta.is_file():
-        return ""
-
-    mime = mimetypes.guess_type(ruta.name)[0] or "image/png"
-    contenido = base64.b64encode(ruta.read_bytes()).decode("utf-8")
-
-    return f"data:{mime};base64,{contenido}"
-
-
-def escapar(texto):
+def esc(texto):
     return html.escape(str(texto), quote=True)
 
 
-def imagen_html(nombre, alt, clase="polaroid-photo"):
-    uri = imagen_uri(nombre)
+def cargar_foto(nombre, clase):
+    ruta = CARPETA / nombre
 
-    if uri:
+    if ruta.is_file():
+        import mimetypes
+        mime = mimetypes.guess_type(ruta.name)[0] or "image/jpeg"
+        datos = base64.b64encode(ruta.read_bytes()).decode("utf-8")
         return (
-            f'<img class="{clase}" src="{uri}" '
-            f'alt="{escapar(alt)}" loading="lazy">'
+            f'<img class="{clase}" '
+            f'src="data:{mime};base64,{datos}" '
+            f'alt="Fotografía de prueba en blanco y negro">'
         )
 
-    return f"""
-    <div class="photo-placeholder">
+    return """
+    <div class="placeholder">
         <span>✦</span>
-        <strong>{escapar(alt)}</strong>
-        <small>Agrega: {escapar(nombre)}</small>
+        <strong>Fotografía de prueba</strong>
+        <small>Sube blanco negro.jpg</small>
     </div>
     """
 
 
-def enlace_html(url, etiqueta):
-    """Solo habilita enlaces web HTTP o HTTPS."""
+def crear_enlace(url, texto):
     url = str(url).strip()
+    partes = urlparse(url)
 
-    if urlparse(url).scheme in ("https", "http") and urlparse(url).netloc:
+    if partes.scheme in ("https", "http") and partes.netloc:
         return (
-            f'<a class="action-link primary" href="{escapar(url)}" '
-            'target="_blank" rel="noopener noreferrer">'
-            f'↗ {escapar(etiqueta)}</a>'
+            f'<a class="link-button" href="{esc(url)}" '
+            f'target="_blank" rel="noopener noreferrer">'
+            f'↗ {esc(texto)}</a>'
         )
 
-    return (
-        '<span class="action-link unavailable">'
-        '↗ Enlace pendiente</span>'
-    )
+    return '<span class="pending">↗ Enlace pendiente</span>'
 
 
-# ======================================================
-# ESTÉTICA VINTAGE — CSS
-# ======================================================
+# ---------------- DISEÑO CSS ----------------
 
 st.markdown("""
 <style>
-@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono&family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
 
 :root {
-    --espresso: #38251d;
-    --coffee: #5c3d2e;
-    --cocoa: #805b40;
-    --caramel: #b58b63;
-    --paper: #f0e1ca;
+    --dark: #38251d;
+    --coffee: #65442f;
+    --brown: #916a49;
+    --beige: #ead7bb;
     --cream: #fff8ec;
-    --ink: #3d2b21;
-    --muted: #806b58;
-    --border: #d2b99a;
+    --ink: #402d21;
 }
 
 .stApp {
     background:
-        radial-gradient(ellipse at 12% 10%,
-            rgba(255,250,235,.95), transparent 34%),
-        radial-gradient(ellipse at 88% 34%,
-            rgba(177,130,85,.20), transparent 35%),
-        linear-gradient(135deg, #e8d6bb, #f4e9d6 48%, #dfc5a3);
-    color: var(--ink);
+        radial-gradient(ellipse at 10% 10%, #fff8e9, transparent 38%),
+        linear-gradient(135deg, #e4ceb0, #f6ead7 50%, #dfc4a0);
     font-family: 'DM Sans', sans-serif;
+    color: var(--ink);
 }
 
-[data-testid="stHeader"] {
-    background: transparent;
-}
-
-.block-container {
-    max-width: 1500px;
-    padding-top: 2rem;
-    padding-bottom: 4rem;
-}
-
-#MainMenu, footer {
-    visibility: hidden;
-}
+[data-testid="stHeader"] { background: transparent; }
+.block-container { max-width: 1450px; padding-top: 2rem; }
+#MainMenu, footer { visibility: hidden; }
 
 h1, h2, h3 {
     font-family: 'Playfair Display', serif !important;
-    color: var(--espresso) !important;
+    color: var(--dark) !important;
 }
 
-p {
-    color: var(--muted);
-    line-height: 1.8;
-}
-
-hr {
-    border: none;
-    height: 1px;
-    background: linear-gradient(
-        90deg, transparent, #9c7755, #d9bd96, #9c7755, transparent
-    );
-    margin: 2rem 0;
-}
-
-/* BARRA LATERAL */
+p { line-height: 1.8; color: #79634f; }
 
 section[data-testid="stSidebar"] {
-    background: linear-gradient(165deg, #493025, #35231b 80%);
-    border-right: 1px solid rgba(255,244,223,.2);
+    background: linear-gradient(170deg, #493025, #302019);
 }
 
-section[data-testid="stSidebar"] * {
-    color: #f7e8d2 !important;
-}
+section[data-testid="stSidebar"] * { color: #f8e9d2 !important; }
 
 section[data-testid="stSidebar"] h1,
 section[data-testid="stSidebar"] h2,
@@ -159,461 +108,340 @@ section[data-testid="stSidebar"] h3 {
     font-family: 'Playfair Display', serif !important;
 }
 
-section[data-testid="stSidebar"] p {
-    font-size: .92rem;
+hr {
+    border: none;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #98704e, #e0c49e, #98704e, transparent);
+    margin: 2rem 0;
 }
 
 /* PORTADA */
 
 .hero {
-    position: relative;
+    padding: clamp(1.5rem, 4vw, 3.5rem);
+    border: 1px solid #d2b99a;
+    border-radius: 26px;
+    background: linear-gradient(125deg, #fff9ed, #ead6b8);
+    box-shadow: 0 18px 42px #573a261f;
     overflow: hidden;
-    border: 1px solid rgba(95,65,43,.24);
-    border-radius: 28px;
-    padding: clamp(1.5rem, 4vw, 3.6rem);
-    background: linear-gradient(
-        125deg, rgba(255,249,237,.96), rgba(231,211,183,.91)
-    );
-    box-shadow: 0 18px 45px rgba(73,48,30,.13);
+    position: relative;
 }
 
 .hero-grid {
     display: grid;
-    grid-template-columns: minmax(0, 1.7fr) minmax(190px, .7fr);
-    gap: 2.4rem;
+    grid-template-columns: 1.6fr .7fr;
+    gap: 2rem;
     align-items: center;
 }
 
 .eyebrow {
-    font: 500 .72rem 'DM Mono', monospace;
-    letter-spacing: .2em;
+    font: .72rem 'DM Mono', monospace;
+    letter-spacing: .17em;
     text-transform: uppercase;
-    color: #916d4d;
-    margin-bottom: .8rem;
+    color: #946d4b;
 }
 
 .hero h1 {
-    font-size: clamp(2.8rem, 5.7vw, 5.4rem);
-    line-height: .98;
-    letter-spacing: -.045em;
-    margin: .2rem 0 1.3rem;
+    font-size: clamp(2.7rem, 5.5vw, 5rem);
+    line-height: 1;
+    margin: 1rem 0;
 }
 
-.hero h1 em {
-    color: #986f4c;
-    font-weight: 500;
-}
+.hero h1 em { color: #9a714d; }
 
 .hero-copy {
-    max-width: 760px;
-    color: #715a46;
-    font-size: 1rem;
     line-height: 1.9;
+    color: #725942;
 }
 
-.hero-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: .55rem;
-    margin-top: 1.4rem;
-}
+.tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
 
-.hero-tag {
-    padding: .45rem .75rem;
-    border-radius: 999px;
-    border: 1px solid #ceb494;
-    background: rgba(255,250,240,.8);
-    color: #694b36;
+.tag {
+    padding: 7px 11px;
+    border: 1px solid #cdb393;
+    border-radius: 30px;
+    background: #fff9ef;
+    color: #694a32;
     font: .7rem 'DM Mono', monospace;
 }
 
 .portrait-frame {
-    padding: 11px 11px 32px;
+    padding: 10px 10px 28px;
     background: #fffaf0;
-    border: 1px solid #d6c2a5;
-    box-shadow: 8px 12px 0 rgba(92,61,40,.12),
-                0 14px 35px rgba(62,39,24,.16);
+    box-shadow: 8px 12px 0 #69482b20, 0 15px 30px #40291924;
     transform: rotate(3deg);
-    animation: floatPhoto 5s ease-in-out infinite;
-    max-width: 280px;
+    animation: float 5s ease-in-out infinite;
+    max-width: 270px;
     margin: auto;
 }
 
-.portrait-photo {
+.portrait {
     display: block;
     width: 100%;
-    height: 280px;
+    height: 260px;
     object-fit: cover;
-    background: #e6d2b5;
-    filter: sepia(.15) saturate(.85);
+    filter: grayscale(1) contrast(.95);
+    background: #e2d1b8;
 }
 
-.portrait-caption {
-    margin-top: 12px;
+.caption {
     text-align: center;
-    color: #79583e;
+    margin-top: 12px;
     font: .68rem 'DM Mono', monospace;
-    letter-spacing: .1em;
+    color: #79583e;
 }
 
-@keyframes floatPhoto {
+@keyframes float {
     0%, 100% { transform: translateY(0) rotate(3deg); }
     50% { transform: translateY(-7px) rotate(1deg); }
 }
 
-.hero-sparkles {
-    position: absolute;
-    right: 4%;
-    top: 6%;
-    color: rgba(128,93,69,.28);
-    font-size: 3rem;
-    letter-spacing: .3em;
-    pointer-events: none;
-}
+/* GALERÍA */
 
-/* ENCABEZADO DE GALERÍA */
+.section-title { margin: 3rem 0 1rem; }
+.section-title h2 { font-size: clamp(2rem, 4vw, 3.1rem); margin: .5rem 0; }
 
-.section-heading {
-    margin: 3rem 0 1.2rem;
-}
-
-.section-heading h2 {
-    font-size: clamp(2.1rem, 4vw, 3.3rem);
-    margin: .1rem 0 .5rem;
-}
-
-.section-heading p {
-    max-width: 760px;
-}
-
-/* GALERÍA DE POLAROIDS */
-
-.activity-grid {
+.gallery {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 1.65rem;
-    align-items: stretch;
-    padding: 1rem .25rem 2rem;
+    gap: 24px;
+    padding: 12px 4px 30px;
+    align-items: start;
 }
 
-.activity-card {
+.card {
     --tilt: 0deg;
     position: relative;
     isolation: isolate;
     min-width: 0;
-    padding: 13px 13px 18px;
-    border: 1px solid #d4bea0;
-    border-radius: 16px;
-    background: linear-gradient(145deg, #fffaf0, #f3e5d0);
-    box-shadow: 0 10px 22px rgba(65,43,27,.14),
-                inset 0 1px 0 #fff;
+    padding: 12px 12px 18px;
+    border: 1px solid #d5bea0;
+    border-radius: 15px;
+    background: linear-gradient(145deg, #fffaf0, #f0dfc7);
+    box-shadow: 0 10px 22px #432d1f20;
     transform: rotate(var(--tilt));
-    transition:
-        transform .38s cubic-bezier(.2,.8,.2,1),
-        box-shadow .38s ease,
-        background .38s ease,
-        border-color .38s ease,
-        filter .38s ease;
-    animation: cardEntrance .7s both;
+    transition: transform .35s ease, box-shadow .35s ease,
+                filter .35s ease, background .35s ease;
+    animation: appear .65s both;
 }
 
-.activity-card:nth-child(3n+1) { --tilt: -.55deg; }
-.activity-card:nth-child(3n+2) { --tilt: .5deg; }
-.activity-card:nth-child(3n) { --tilt: -.25deg; }
+.card:nth-child(3n+1) { --tilt: -.6deg; }
+.card:nth-child(3n+2) { --tilt: .5deg; }
+.card:nth-child(3n) { --tilt: -.25deg; }
 
-.activity-card::before {
+.card::before {
     content: "";
     position: absolute;
     z-index: -1;
     inset: -5px;
-    border-radius: 20px;
+    border-radius: 19px;
     background: conic-gradient(
-        from 0deg,
-        transparent 0 15%,
-        #d5a46b 20%,
-        transparent 27% 49%,
-        #b58b63 54%,
-        transparent 61% 78%,
-        #e7c68d 84%,
-        transparent 91%
+        transparent, #d4a56f, transparent 25%,
+        #b68a5f, transparent 60%, #edcb91, transparent
     );
     opacity: 0;
     filter: blur(8px);
-    transition: opacity .35s ease;
+    transition: opacity .3s;
 }
 
-.activity-card::after {
-    content: "✦  ·  ✧  ·  ✦";
+.card::after {
+    content: "✦  ✧  ✦";
     position: absolute;
-    top: -15px;
     right: 12px;
-    color: #a97542;
-    font-size: 15px;
-    letter-spacing: 7px;
+    top: -17px;
+    color: #a87543;
+    letter-spacing: 5px;
     opacity: 0;
-    transform: translateY(7px) scale(.7);
-    transition: all .35s ease;
+    transform: translateY(5px);
+    transition: all .3s;
     pointer-events: none;
 }
 
-.activity-card:hover,
-.activity-card:focus-within {
+.card:hover, .card:focus-within {
     z-index: 5;
-    transform: translateY(-8px) scale(1.035) rotate(0deg);
-    background: linear-gradient(145deg, #fffdf7, #f8ead5);
-    border-color: #8d6444;
-    box-shadow: 0 24px 42px rgba(54,34,21,.25),
-                0 0 0 2px rgba(155,111,72,.18);
+    transform: translateY(-8px) scale(1.035) rotate(0);
+    background: #fffdf7;
+    box-shadow: 0 24px 40px #39251d40, 0 0 0 2px #9b6f4830;
 }
 
-.activity-card:hover::before,
-.activity-card:focus-within::before {
-    opacity: .65;
-    animation: sparkleSpin 5s linear infinite;
+.card:hover::before, .card:focus-within::before {
+    opacity: .8;
+    animation: spin 6s linear infinite;
 }
 
-.activity-card:hover::after,
-.activity-card:focus-within::after {
+.card:hover::after, .card:focus-within::after {
     opacity: 1;
-    transform: translateY(0) scale(1);
+    transform: translateY(0);
 }
 
-.activity-grid:has(.activity-card:hover) .activity-card:not(:hover) {
-    filter: brightness(.88) saturate(.82);
+.gallery:has(.card:hover) .card:not(:hover) {
+    filter: brightness(.88) saturate(.8);
     transform: scale(.985) rotate(var(--tilt));
 }
 
-@keyframes sparkleSpin {
-    to { transform: rotate(360deg); }
-}
-
-@keyframes cardEntrance {
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes appear {
     from { opacity: 0; translate: 0 15px; }
     to { opacity: 1; translate: 0 0; }
 }
 
-.polaroid-photo,
-.photo-placeholder {
+.polaroid, .placeholder {
     display: block;
+    box-sizing: border-box;
     width: 100%;
     height: 205px;
     object-fit: cover;
-    border-radius: 8px;
+    border-radius: 7px;
+    border: 1px solid #6c4a301c;
     background: #e6d3b6;
-    border: 1px solid rgba(79,52,34,.13);
-    transition: filter .35s ease, transform .35s ease;
 }
 
-.polaroid-photo {
-    filter: sepia(.14) saturate(.88);
+.polaroid {
+    filter: grayscale(1) contrast(.95);
+    transition: filter .3s, transform .3s;
 }
 
-.activity-card:hover .polaroid-photo {
-    filter: sepia(0) saturate(1.05);
+.card:hover .polaroid {
+    filter: grayscale(.3);
     transform: scale(.99);
 }
 
-.photo-placeholder {
-    box-sizing: border-box;
+.placeholder {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: .5rem;
+    gap: 8px;
     border: 1px dashed #b89a78;
     color: #805d45;
-    background: repeating-linear-gradient(
-        45deg, #f2e2cb, #f2e2cb 10px, #ead7bb 10px, #ead7bb 11px
-    );
     text-align: center;
-    padding: 1rem;
+    padding: 10px;
+    background: repeating-linear-gradient(45deg, #f2e2cb, #f2e2cb 10px, #ead7bb 10px, #ead7bb 11px);
 }
 
-.photo-placeholder span { font-size: 2.7rem; }
-.photo-placeholder strong { font-size: .8rem; }
-.photo-placeholder small { font: .63rem 'DM Mono', monospace; }
+.placeholder span { font-size: 2.5rem; }
+.placeholder strong { font-size: .8rem; }
+.placeholder small { font: .62rem 'DM Mono', monospace; }
 
-.card-meta {
+.meta {
     display: flex;
     justify-content: space-between;
+    gap: 8px;
     align-items: center;
-    gap: .5rem;
     margin: 15px 2px 9px;
     font: .64rem 'DM Mono', monospace;
     text-transform: uppercase;
-    letter-spacing: .08em;
-    color: #967452;
+    letter-spacing: .06em;
+    color: #987554;
 }
 
-.card-index {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 29px;
-    height: 29px;
-    border-radius: 50%;
+.number {
     border: 1px solid #d5b995;
-    color: #6e4a30;
     background: #f6e7d1;
-    flex-shrink: 0;
+    border-radius: 50%;
+    padding: 7px;
+    min-width: 15px;
+    text-align: center;
 }
 
-.activity-card h3 {
-    font: 600 1.28rem/1.25 'Playfair Display', serif !important;
-    color: #402b20 !important;
+.card h3 {
+    font: 600 1.3rem/1.25 'Playfair Display', serif !important;
     text-align: left !important;
-    min-height: 3.15rem;
-    margin: 0 2px .65rem !important;
+    min-height: 3rem;
+    margin: 0 2px .6rem !important;
 }
 
-.card-short {
-    color: #796451;
+.summary {
+    min-height: 4.2rem;
     font-size: .85rem;
     line-height: 1.7;
-    margin: 0 2px 1rem;
-    min-height: 4.3rem;
+    color: #796451;
+    margin-bottom: 1rem;
 }
 
-/* DETALLES DESPLEGABLES */
-
-.activity-card details {
+.card details {
     border-top: 1px solid #e0ccb0;
-    margin-top: .7rem;
     padding-top: .8rem;
+    margin-top: .5rem;
 }
 
-.activity-card summary {
+.card summary {
+    display: inline-block;
     list-style: none;
     cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    gap: .45rem;
-    color: #70472e;
-    font: 600 .8rem 'DM Sans', sans-serif;
-    padding: .6rem .85rem;
+    padding: 9px 13px;
     border: 1px solid #c8a985;
-    border-radius: 999px;
+    border-radius: 30px;
     background: #f5e5cf;
-    transition: all .2s ease;
+    color: #70472e;
+    font-size: .8rem;
+    font-weight: 600;
+    transition: background .2s;
 }
 
-.activity-card summary::-webkit-details-marker {
-    display: none;
-}
+.card summary::-webkit-details-marker { display: none; }
+.card summary::after { content: "  ＋"; }
+.card details[open] summary::after { content: "  −"; }
+.card summary:hover { background: #e7d0b1; }
 
-.activity-card summary::after {
-    content: "＋";
-    font-size: 1rem;
-}
-
-.activity-card details[open] summary::after {
-    content: "−";
-}
-
-.activity-card summary:hover {
-    background: #e7d0b1;
-    transform: translateY(-1px);
-}
-
-.card-details {
+.details-text {
     color: #6f5845;
     font-size: .85rem;
     line-height: 1.75;
-    padding: .8rem .1rem .25rem;
+    padding-top: .7rem;
 }
 
-.card-details p {
-    color: #6f5845;
-    font-size: .85rem;
-}
+.details-text strong { color: #4a3021; }
 
-.card-details strong {
-    color: #4a3021;
-}
-
-.card-actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: .55rem;
-    margin-top: .85rem;
-}
-
-.action-link {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: .35rem;
-    padding: .62rem .85rem;
-    border-radius: 999px;
+.link-button, .pending {
+    display: inline-block;
+    margin-top: 8px;
+    padding: 10px 13px;
+    border-radius: 30px;
+    font-size: .76rem;
+    font-weight: 600;
     text-decoration: none !important;
-    font: 600 .76rem 'DM Sans', sans-serif;
 }
 
-.action-link.primary {
+.link-button {
     color: #fff6e9 !important;
     background: #65442f;
-    border: 1px solid #65442f;
-    transition: transform .2s, background .2s;
 }
 
-.action-link.primary:hover {
-    background: #3f2a1e;
-    transform: translateY(-2px);
-}
+.link-button:hover { background: #3f2a1e; }
 
-.action-link.unavailable {
-    color: #84664a !important;
-    background: #f2e3ce;
+.pending {
     border: 1px dashed #b89570;
-    font-size: .73rem;
+    color: #84664a;
+    background: #f2e3ce;
 }
 
-.note-bar {
+.notice {
+    padding: 16px;
     border: 1px solid #d2b895;
-    border-radius: 16px;
-    padding: 1rem 1.2rem;
-    background: rgba(255,249,238,.65);
+    border-radius: 14px;
+    background: #fff9eea8;
     color: #765a43;
-    font-size: .84rem;
 }
 
-.note-bar strong { color: #4a3021; }
-
-.footer-note {
+.footer {
     text-align: center;
+    padding: 30px 0 10px;
     color: #80654d;
-    padding: 2rem 0 .5rem;
     font: .68rem 'DM Mono', monospace;
-    letter-spacing: .12em;
+    letter-spacing: .1em;
 }
 
-/* RESPONSIVE */
-
-@media (max-width: 1000px) {
-    .activity-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .hero-grid {
-        grid-template-columns: minmax(0, 1fr) 220px;
-    }
+@media (max-width: 950px) {
+    .gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .hero-grid { grid-template-columns: 1fr 210px; }
 }
 
-@media (max-width: 650px) {
-    .activity-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .hero-grid {
-        grid-template-columns: 1fr;
-    }
-
+@media (max-width: 620px) {
+    .gallery, .hero-grid { grid-template-columns: 1fr; }
     .portrait-frame { max-width: 220px; }
-    .portrait-photo { height: 220px; }
-
-    .activity-card:hover {
-        transform: translateY(-4px) scale(1.01);
-    }
+    .portrait { height: 220px; }
+    .card:hover { transform: translateY(-4px) scale(1.01); }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -626,330 +454,205 @@ section[data-testid="stSidebar"] p {
 """, unsafe_allow_html=True)
 
 
-# ======================================================
-# PORTADA
-# ======================================================
+# ---------------- PORTADA ----------------
 
-foto = imagen_html(
-    "SimonImagen.png",
-    "Retrato de Simón Mesa Díaz",
-    "portrait-photo"
-)
+foto_portada = cargar_foto(FOTO, "portrait")
 
 st.markdown(f"""
 <section class="hero">
-    <div class="hero-sparkles">✧ ✦ ✧</div>
-
     <div class="hero-grid">
         <div>
-            <div class="eyebrow">
-                Cuaderno digital · Semestre II · Edición 02
-            </div>
-
-            <h1>
-                Interfaces<br>
-                <em>multimodales.</em>
-            </h1>
+            <div class="eyebrow">Cuaderno digital · Semestre II · Edición 02</div>
+            <h1>Interfaces<br><em>multimodales.</em></h1>
 
             <div class="hero-copy">
-                Soy <strong>Simón Mesa Díaz</strong>, y este espacio
-                reúne una nueva etapa de exploración, práctica y creatividad.
-                Aquí conviven las actividades realizadas en clase, los recursos
-                temáticos y los experimentos con dibujo, reconocimiento,
-                sensores, simulación y herramientas digitales.
-
-                Cada actividad es una pequeña evidencia de lo aprendido
-                y de las ganas de seguir diseñando experiencias interactivas
-                con intención, curiosidad y pasión.
+                Hola, soy <strong>Tu nombre aquí</strong>. Este espacio reúne
+                mis experiencias, experimentos y aprendizajes de la segunda
+                parte del semestre.
+                <br><br>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                Aprender haciendo, experimentar sin miedo y transformar ideas
+                en experiencias interactivas.
             </div>
 
-            <div class="hero-tags">
-                <span class="hero-tag">✳ Diseño interactivo</span>
-                <span class="hero-tag">⌘ Experimentación</span>
-                <span class="hero-tag">↗ Aprender haciendo</span>
-                <span class="hero-tag">☕ Edición vintage</span>
+            <div class="tags">
+                <span class="tag">✳ Diseño interactivo</span>
+                <span class="tag">⌘ Experimentación</span>
+                <span class="tag">↗ Aprender haciendo</span>
+                <span class="tag">☕ Edición vintage</span>
             </div>
         </div>
 
         <div class="portrait-frame">
-            {foto}
-            <div class="portrait-caption">
-                SIMÓN MESA DÍAZ · PORTAFOLIO II
-            </div>
+            {foto_portada}
+            <div class="caption">TU NOMBRE · PORTAFOLIO II</div>
         </div>
     </div>
 </section>
 """, unsafe_allow_html=True)
 
 
-# ======================================================
-# BARRA LATERAL
-# ======================================================
+# ---------------- BARRA LATERAL ----------------
 
 with st.sidebar:
     st.markdown("# ✦ Archivo creativo")
     st.markdown("**PORTAFOLIO · SEGUNDA ETAPA**")
-
     st.write(
-        "Un recorrido por los aprendizajes, ejercicios y experimentos "
-        "de Creación de Interfaces Multimodales."
+        "Una colección de actividades, recursos y pruebas de clase. "
+        "Esta versión usa contenido provisional para probar el diseño."
     )
-
     st.markdown("---")
-    st.markdown("### Dentro de este cuaderno")
+    st.markdown("### Dentro del cuaderno")
     st.markdown("""
     - ✎ Dibujo y reconocimiento
     - ◉ Sensores y simulación
     - ⌘ Herramientas tecnológicas
     - ↗ Repositorios y proyectos
-    - ✧ Reflexiones de aprendizaje
+    - ✧ Reflexiones
     """)
-
     st.markdown("---")
-    st.markdown("### Mi filosofía")
-    st.write(
-        "Explorar, probar, equivocarse, aprender y volver a crear. "
-        "Porque cada intento también hace parte del diseño."
-    )
-
-    st.markdown("---")
-    st.caption("Hecho con curiosidad, café y ganas de crear. ☕")
+    st.caption("Plantilla de prueba · Hecha con curiosidad y café. ☕")
 
 
-# ======================================================
-# TÍTULO DE LA GALERÍA
-# ======================================================
+# ---------------- DATOS DE PRUEBA ----------------
+
+texto_lorem = (
+    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. "
+    "Integer vitae sem sed justo malesuada finibus. Este texto es "
+    "provisional y luego podrás sustituirlo por la descripción real "
+    "de la actividad desarrollada en clase."
+)
+
+aprendizaje_lorem = (
+    "Lorem ipsum dolor sit amet. Escribe aquí el concepto, la habilidad "
+    "o la reflexión que te dejó esta actividad."
+)
+
+actividades = [
+    {
+        "titulo": "Actividad de ejemplo uno",
+        "categoria": "Práctica · 01",
+        "resumen": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+        "descripcion": texto_lorem,
+        "aprendizaje": aprendizaje_lorem,
+        "url": "",
+        "boton": "Ir a la actividad",
+    },
+    {
+        "titulo": "Actividad de ejemplo dos",
+        "categoria": "Experimentación · 02",
+        "resumen": "Sed do eiusmod tempor incididunt ut labore et dolore.",
+        "descripcion": texto_lorem,
+        "aprendizaje": aprendizaje_lorem,
+        "url": "",
+        "boton": "Abrir recurso",
+    },
+    {
+        "titulo": "Actividad de ejemplo tres",
+        "categoria": "Interfaz · 03",
+        "resumen": "Ut enim ad minim veniam, quis nostrud exercitation.",
+        "descripcion": texto_lorem,
+        "aprendizaje": aprendizaje_lorem,
+        "url": "",
+        "boton": "Ver proyecto",
+    },
+    {
+        "titulo": "Actividad de ejemplo cuatro",
+        "categoria": "Simulación · 04",
+        "resumen": "Duis aute irure dolor in reprehenderit in voluptate.",
+        "descripcion": texto_lorem,
+        "aprendizaje": aprendizaje_lorem,
+        "url": "",
+        "boton": "Explorar",
+    },
+    {
+        "titulo": "Actividad de ejemplo cinco",
+        "categoria": "Tecnología · 05",
+        "resumen": "Excepteur sint occaecat cupidatat non proident.",
+        "descripcion": texto_lorem,
+        "aprendizaje": aprendizaje_lorem,
+        "url": "",
+        "boton": "Ir al recurso",
+    },
+    {
+        "titulo": "Actividad de ejemplo seis",
+        "categoria": "Aprendizaje · 06",
+        "resumen": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+        "descripcion": texto_lorem,
+        "aprendizaje": aprendizaje_lorem,
+        "url": "",
+        "boton": "Conocer más",
+    },
+]
+
+
+# ---------------- GALERÍA ----------------
 
 st.markdown("""
-<div class="section-heading">
+<div class="section-title">
     <div class="eyebrow">Galería de procesos · 01—∞</div>
     <h2>Mis actividades prácticas</h2>
     <p>
-        Cada Polaroid guarda una experiencia. Explora las tarjetas,
-        descubre lo aprendido y visita los recursos relacionados.
-        Pasa el cursor sobre las fotografías para revelar sus destellos.
+        Pasa el cursor sobre las Polaroids para descubrir sus efectos.
+        Pulsa «Leer más información» para abrir los detalles.
     </p>
 </div>
 """, unsafe_allow_html=True)
 
 
-# ======================================================
-# ACTIVIDADES
-#
-# Cambia las imágenes, descripciones y URL por las reales.
-# Usa url="" si todavía no tienes el enlace.
-# ======================================================
+def tarjeta(actividad, numero):
+    foto = cargar_foto(FOTO, "polaroid")
+    boton = crear_enlace(actividad["url"], actividad["boton"])
 
-actividades = [
-    {
-        "titulo": "Tablero de dibujo y reconocimiento numérico",
-        "imagen": "tablero_dibujo.png",
-        "categoria": "Dibujo · Reconocimiento",
-        "resumen": (
-            "Una experiencia donde los trazos se convierten en información "
-            "que una máquina puede interpretar."
-        ),
-        "descripcion": (
-            "Se exploró el uso de un tablero de dibujo para representar "
-            "caracteres numéricos y observar cómo una interfaz recibe "
-            "trazos como entrada. La actividad relaciona la interacción "
-            "directa del usuario con procesos de reconocimiento y clasificación."
-        ),
-        "aprendizaje": (
-            "Comprender la relación entre entrada visual, representación "
-            "de datos y reconocimiento automático."
-        ),
-        "url": "",
-        "boton": "Ver actividad",
-    },
-    {
-        "titulo": "Simuladores físicos y sensores",
-        "imagen": "sensores.png",
-        "categoria": "Simulación · Hardware",
-        "resumen": (
-            "Exploración de componentes y sensores para comprender cómo "
-            "el entorno físico puede activar una interfaz."
-        ),
-        "descripcion": (
-            "Se realizaron pruebas con simuladores de sistemas físicos "
-            "y sensores para observar sus respuestas. La práctica permitió "
-            "relacionar variables del entorno con comportamientos digitales "
-            "y comprender la lógica de los sistemas interactivos."
-        ),
-        "aprendizaje": (
-            "Reconocer el papel de los sensores, las señales de entrada "
-            "y las respuestas de un sistema."
-        ),
-        "url": "",
-        "boton": "Ver simulación",
-    },
-    {
-        "titulo": "Exploración de herramientas Huawei",
-        "imagen": "huawei.png",
-        "categoria": "Tecnología · Recursos",
-        "resumen": (
-            "Acercamiento a herramientas y recursos tecnológicos para "
-            "experimentar con nuevas posibilidades digitales."
-        ),
-        "descripcion": (
-            "Se exploraron recursos tecnológicos y entornos de aprendizaje "
-            "asociados con las herramientas utilizadas durante el curso. "
-            "La actividad se enfocó en investigar sus posibilidades, "
-            "comprender sus funciones y relacionarlas con los conceptos vistos."
-        ),
-        "aprendizaje": (
-            "Investigar plataformas tecnológicas y reconocer sus aplicaciones "
-            "en experiencias interactivas."
-        ),
-        "url": "",
-        "boton": "Ir al recurso",
-    },
-    {
-        "titulo": "Prácticas con Simbly",
-        "imagen": "simbly.png",
-        "categoria": "Práctica · Simulación",
-        "resumen": (
-            "Experimentación con recursos interactivos para llevar "
-            "los conceptos de clase a pruebas concretas."
-        ),
-        "descripcion": (
-            "Se utilizó el entorno de práctica para explorar configuraciones, "
-            "observar resultados y ajustar los elementos de la actividad. "
-            "El proceso permitió aprender mediante la experimentación "
-            "y la comparación de diferentes respuestas."
-        ),
-        "aprendizaje": (
-            "Aplicar conceptos vistos en clase y documentar los resultados "
-            "de la experimentación."
-        ),
-        "url": "",
-        "boton": "Abrir recurso",
-    },
-    {
-        "titulo": "GitHub: repositorio y documentación",
-        "imagen": "github.png",
-        "categoria": "Código · Versionamiento",
-        "resumen": (
-            "Organización de archivos y proyectos para documentar "
-            "el proceso y compartir los resultados."
-        ),
-        "descripcion": (
-            "Se exploró GitHub como plataforma para crear repositorios, "
-            "organizar archivos y presentar proyectos. Esta práctica permite "
-            "comprender la importancia de documentar el trabajo y mantener "
-            "un espacio donde se pueda consultar su evolución."
-        ),
-        "aprendizaje": (
-            "Comprender la estructura de un repositorio, la documentación "
-            "y los fundamentos del control de versiones."
-        ),
-        "url": "https://github.com/",
-        "boton": "Ir a GitHub",
-    },
-    {
-        "titulo": "Bitácora de aprendizajes",
-        "imagen": "bitacora.png",
-        "categoria": "Reflexión · Proceso",
-        "resumen": (
-            "Un registro de los ejercicios, los retos y los descubrimientos "
-            "realizados durante esta etapa del semestre."
-        ),
-        "descripcion": (
-            "Esta sección reúne reflexiones sobre las actividades "
-            "desarrolladas y los recursos utilizados. La bitácora permite "
-            "reconocer la evolución del proceso, identificar dificultades "
-            "y conectar los ejercicios con los objetivos de la asignatura."
-        ),
-        "aprendizaje": (
-            "Comunicar el proceso, evaluar los resultados y reconocer "
-            "oportunidades de mejora."
-        ),
-        "url": "",
-        "boton": "Ver bitácora",
-    },
-]
-
-
-# ======================================================
-# GENERADOR DE TARJETAS
-# ======================================================
-
-def crear_tarjeta(actividad, numero):
-    foto_html = imagen_html(
-        actividad["imagen"],
-        actividad["titulo"]
-    )
-
-    titulo = escapar(actividad["titulo"])
-    categoria = escapar(actividad["categoria"])
-    resumen = escapar(actividad["resumen"])
-    descripcion = escapar(actividad["descripcion"])
-    aprendizaje = escapar(actividad["aprendizaje"])
-
-    boton_html = enlace_html(
-        actividad["url"],
-        actividad["boton"]
-    )
+    titulo = esc(actividad["titulo"])
+    categoria = esc(actividad["categoria"])
+    resumen = esc(actividad["resumen"])
+    descripcion = esc(actividad["descripcion"])
+    aprendizaje = esc(actividad["aprendizaje"])
 
     return f"""
-    <article class="activity-card">
-        {foto_html}
-
-        <div class="card-meta">
+    <article class="card">
+        {foto}
+        <div class="meta">
             <span>{categoria}</span>
-            <span class="card-index">{numero:02d}</span>
+            <span class="number">{numero:02d}</span>
         </div>
 
         <h3>{titulo}</h3>
-
-        <div class="card-short">
-            {resumen}
-        </div>
+        <div class="summary">{resumen}</div>
 
         <details>
             <summary>Leer más información</summary>
-
-            <div class="card-details">
+            <div class="details-text">
                 <p>{descripcion}</p>
-
-                <p>
-                    <strong>Lo que me llevo:</strong>
-                    {aprendizaje}
-                </p>
-
-                <div class="card-actions">
-                    {boton_html}
-                </div>
+                <p><strong>Lo que me llevo:</strong> {aprendizaje}</p>
+                {boton}
             </div>
         </details>
     </article>
     """
 
 
-tarjetas_html = "".join(
-    crear_tarjeta(actividad, i)
-    for i, actividad in enumerate(actividades, start=1)
+galeria = "".join(
+    tarjeta(actividad, numero)
+    for numero, actividad in enumerate(actividades, start=1)
 )
 
 st.markdown(
-    f'<div class="activity-grid">{tarjetas_html}</div>',
-    unsafe_allow_html=True
+    f'<div class="gallery">{galeria}</div>',
+    unsafe_allow_html=True,
 )
 
-
-# ======================================================
-# CIERRE
-# ======================================================
-
 st.markdown("""
-<div class="note-bar">
-    ✦ <strong>Nota del creador:</strong>
-    Este portafolio está en constante evolución.
-    Cada actividad representa una oportunidad para explorar,
-    aprender y diseñar algo nuevo.
+<div class="notice">
+    ✦ <strong>Modo demostración:</strong>
+    los textos son provisionales. Todas las tarjetas y la portada usan
+    el mismo archivo de imagen. Los enlaces se pueden completar después.
 </div>
 
-<div class="footer-note">
+<div class="footer">
     FIN DE LA PÁGINA, NO DEL PROCESO · DISEÑADO CON CURIOSIDAD ☕
+</div>
+""", unsafe_allow_html=True)
 </div>
 """, unsafe_allow_html=True)
