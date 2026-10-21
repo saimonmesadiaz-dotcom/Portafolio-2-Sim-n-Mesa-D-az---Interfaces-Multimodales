@@ -47,8 +47,7 @@ st.markdown(
       [data-testid="stSidebarHeader"] {padding-bottom: 0 !important;}
 
       .pf-side {font-family: 'DM Sans', sans-serif; color: #f8e9d2; padding: 0 .4rem 1rem;}
-      .pf-star {font-size: 30px; line-height: 1; color: #e8c27a; display: inline-block;
-                animation: pf-twinkle 3.2s ease-in-out infinite;}
+      .pf-star {font-size: 30px; line-height: 1; color: #e8c27a; text-align: center; margin: 1.1rem 0 .9rem;}
       .pf-title {font-family: 'Playfair Display', serif; font-size: 1.7rem; font-weight: 700;
                  color: #f8e9d2; line-height: 1.15; margin: .3rem 0 .3rem;}
       .pf-sub {font-family: 'DM Mono', monospace; font-size: .72rem; letter-spacing: .14em;
@@ -64,10 +63,6 @@ st.markdown(
       .nav-item:hover span {transform: rotate(180deg) scale(1.35); color: #e8c27a;}
       .pf-foot {margin-top: 1.6rem; padding-top: 1rem; border-top: 1px solid rgba(101, 68, 47, .5);
                 font-family: 'DM Mono', monospace; font-size: .72rem; color: #b89c7d;}
-      @keyframes pf-twinkle {
-        0%, 100% {transform: scale(1) rotate(0deg); opacity: .95;}
-        50% {transform: scale(1.35) rotate(90deg); opacity: .6;}
-      }
     </style>
     """,
     unsafe_allow_html=True,
@@ -372,6 +367,9 @@ HTML = r"""<!DOCTYPE html>
         }
         .channel-chip:hover { transform: translateY(-3px) rotate(-2deg); background: #65442f; color: #fff8ec; }
 
+        .tag-chip { cursor: default; transition: transform .25s ease, background-color .25s ease, color .25s ease, border-color .25s ease; }
+        .tag-chip:hover { transform: translateY(-3px) rotate(-2deg); background-color: #65442f !important; color: #fff8ec !important; border-color: #65442f !important; }
+
         @media (prefers-reduced-motion: reduce) {
             *, *::before, *::after { animation: none !important; transition: none !important; }
             .reveal:not(.in) { opacity: 1; }
@@ -418,10 +416,10 @@ HTML = r"""<!DOCTYPE html>
                         Aprender haciendo, experimentar sin miedo y transformar ideas en experiencias interactivas y multimodales.
                     </div>
                     <div class="flex flex-wrap gap-2 pt-2">
-                        <span class="px-3 py-1 bg-[#fff9ef] border border-[#cdb393] rounded-full text-xs font-mono-custom text-[#694a32]">✳ Diseño interactivo</span>
-                        <span class="px-3 py-1 bg-[#fff9ef] border border-[#cdb393] rounded-full text-xs font-mono-custom text-[#694a32]">⌘ Experimentación</span>
-                        <span class="px-3 py-1 bg-[#fff9ef] border border-[#cdb393] rounded-full text-xs font-mono-custom text-[#694a32]">↗ Aprender haciendo</span>
-                        <span class="px-3 py-1 bg-[#fff9ef] border border-[#cdb393] rounded-full text-xs font-mono-custom text-[#694a32]">☕ Edición vintage</span>
+                        <span class="tag-chip px-3 py-1 bg-[#fff9ef] border border-[#cdb393] rounded-full text-xs font-mono-custom text-[#694a32]">✳ Diseño interactivo</span>
+                        <span class="tag-chip px-3 py-1 bg-[#fff9ef] border border-[#cdb393] rounded-full text-xs font-mono-custom text-[#694a32]">⌘ Experimentación</span>
+                        <span class="tag-chip px-3 py-1 bg-[#fff9ef] border border-[#cdb393] rounded-full text-xs font-mono-custom text-[#694a32]">↗ Aprender haciendo</span>
+                        <span class="tag-chip px-3 py-1 bg-[#fff9ef] border border-[#cdb393] rounded-full text-xs font-mono-custom text-[#694a32]">☕ Edición vintage</span>
                     </div>
                 </div>
             </div>
