@@ -20,9 +20,14 @@ st.markdown(
 
       /* Página limpia, sin márgenes */
       header, footer, #MainMenu {visibility: hidden;}
-      .block-container {padding: 0 !important; max-width: 100% !important;}
+      .block-container, [data-testid="stMainBlockContainer"] {
+        padding: 0 !important; max-width: 100% !important; min-height: 0 !important;
+      }
+      [data-testid="stMain"] [data-testid="stVerticalBlock"] {gap: 0 !important;}
+      [data-testid="stMain"] {padding-bottom: 0 !important;}
+      [data-testid="stBottom"], [data-testid="stBottomBlockContainer"] {display: none !important;}
       iframe {display: block;}
-      .stApp {background: #ecdcc0;}
+      .stApp, [data-testid="stAppViewContainer"], [data-testid="stMain"] {background: #e4ceb0 !important;}
 
       /* La flechita para mostrar/ocultar la barra lateral siempre visible */
       [data-testid="stSidebarCollapsedControl"],
@@ -260,7 +265,7 @@ HTML = r"""<!DOCTYPE html>
         }
 
         /* ============ TOQUES EXTRA ============ */
-        html { scroll-behavior: smooth; overflow-y: hidden; }
+        html { scroll-behavior: smooth; overflow-y: hidden; background: #e4ceb0; }
 
         /* Textura de papel (grano) sobre toda la página */
         body::after {
@@ -381,7 +386,7 @@ HTML = r"""<!DOCTYPE html>
 <body class="flex flex-col md:flex-row">
 
     <!-- CONTENIDO PRINCIPAL -->
-    <main class="flex-1 p-4 md:p-10 max-w-[1600px] mx-auto w-full transition-all duration-300">
+    <main class="flex-1 p-4 md:p-10 max-w-[1600px] mx-auto w-full transition-all duration-300" style="padding-bottom:0.75rem">
 
         <!-- HERO -->
         <section class="hero-box rounded-2xl p-6 md:p-8 relative mb-8">
@@ -438,13 +443,13 @@ HTML = r"""<!DOCTYPE html>
 
         <div class="gallery-grid" id="cardsContainer"></div>
 
-        <div id="reflexiones" class="modal-note mt-12 p-6 md:p-8">
+        <div id="reflexiones" class="modal-note mt-12 p-6 md:p-8 text-center">
             <div class="font-mono-custom text-xs tracking-widest text-[#8d5b3d] uppercase mb-2">Reflexión · Multimodalidad</div>
             <h3 class="font-serif-custom text-2xl md:text-3xl font-bold mb-3">Hablar con la tecnología con todos los sentidos</h3>
-            <p class="text-[#65442f] leading-relaxed max-w-3xl mb-4">
+            <p class="text-[#65442f] leading-relaxed max-w-3xl mx-auto mb-5">
                 Una interfaz multimodal no depende de un solo canal: permite tocar, hablar, señalar, mirar o escuchar, y elegir en cada momento la forma más natural de comunicarse. Diseñar así es pensar en las personas, en sus contextos y en sus capacidades, para que la tecnología se adapte a ellas y no al revés.
             </p>
-            <div class="flex flex-wrap gap-2">
+            <div class="flex flex-wrap justify-center gap-2">
                 <span class="channel-chip">✋ Tacto</span>
                 <span class="channel-chip">🎙 Voz</span>
                 <span class="channel-chip">👁 Visión</span>
@@ -453,7 +458,7 @@ HTML = r"""<!DOCTYPE html>
             </div>
         </div>
 
-        <footer class="mt-10 mb-6 text-center text-xs font-mono-custom text-[#80654d] tracking-widest uppercase">
+        <footer class="mt-8 mb-2 text-center text-xs font-mono-custom text-[#80654d] tracking-widest uppercase">
             Fin de la página, no del proceso · Diseñado con curiosidad
         </footer>
     </main>
@@ -558,6 +563,7 @@ HTML = r"""<!DOCTYPE html>
                 if (window.frameElement) {
                     const alto = Math.ceil(document.body.getBoundingClientRect().height);
                     window.frameElement.style.height = alto + 'px';
+                    window.frameElement.setAttribute('height', alto);
                 }
             } catch (e) {}
         }
