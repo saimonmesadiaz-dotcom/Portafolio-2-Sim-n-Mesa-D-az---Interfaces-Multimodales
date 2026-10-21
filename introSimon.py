@@ -731,7 +731,7 @@ body::after {
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
             <div class="lg:col-span-4 flex justify-center lg:justify-start">
                 <div class="portrait-frame p-3 pb-4 max-w-[320px] w-full rounded-sm">
-                    <div class="w-full h-48 md:h-52 bg-[#e2d1b8] rounded overflow-hidden">
+                    <div class="w-full h-64 md:h-80 bg-[#e2d1b8] rounded overflow-hidden">
                         <img id="foto-portada" src="Simon.jpeg"
                              alt="Fotografía de portada"
                              class="w-full h-full object-cover"
