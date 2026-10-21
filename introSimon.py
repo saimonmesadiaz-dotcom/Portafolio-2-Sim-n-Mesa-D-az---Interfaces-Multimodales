@@ -17,6 +17,27 @@ st.set_page_config(
 # ESTILOS DE STREAMLIT Y BARRA LATERAL
 # ============================================================
 st.markdown(
+    section[data-testid="stSidebar"] {
+    background: linear-gradient(170deg, #493025, #302019) !important;
+    border-right: 1px solid rgba(101, 68, 47, .35);
+}
+
+section[data-testid="stSidebar"] > div {
+    height: 100vh;
+    overflow-y: auto;
+}
+
+section[data-testid="stSidebar"] [data-testid="stSidebarContent"] {
+    padding-top: 1rem;
+    overflow-y: auto;
+}
+
+section[data-testid="stSidebar"] .pf-side {
+    display: block;
+    visibility: visible;
+    opacity: 1;
+    color: #f8e9d2;
+}
     """
     <style>
       @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;700&family=Playfair+Display:wght@400;700&display=swap');
@@ -283,25 +304,27 @@ h1,h2,h3,.font-serif-custom {
 .portrait-frame:hover {transform:rotate(0) scale(1.02);}
 
 .gallery-grid {
-    display:grid;
-    grid-template-columns:repeat(3,minmax(0,1fr));
-    gap:2.2rem 1.8rem;
-    align-items:stretch;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 2.2rem 1.8rem;
+    align-items: start;
 }
 
 .polaroid-card {
-    min-width:0;
-    position:relative;
-    isolation:isolate;
-    padding:16px 16px 20px;
-    border:2px solid #dcd0be;
-    border-radius:14px;
-    background:linear-gradient(145deg,#fffaf0,#f2e4cf);
-    box-shadow:0 10px 22px rgba(56,37,29,.1);
-    transition:transform .35s cubic-bezier(.2,.8,.2,1),
-               border-color .35s ease,
-               box-shadow .35s ease,
-               background-color .35s ease;
+    min-width: 0;
+    align-self: start;
+    height: fit-content;
+    position: relative;
+    isolation: isolate;
+    padding: 16px 16px 20px;
+    border: 2px solid #dcd0be;
+    border-radius: 14px;
+    background: linear-gradient(145deg, #fffaf0, #f2e4cf);
+    box-shadow: 0 10px 22px rgba(56, 37, 29, .1);
+    transition: transform .35s cubic-bezier(.2, .8, .2, 1),
+                border-color .35s ease,
+                box-shadow .35s ease,
+                background-color .35s ease;
 }
 
 .polaroid-card:nth-child(2n+1) {transform:rotate(-.5deg);}
@@ -1193,19 +1216,23 @@ function renderCards() {
 // ============================================================
 
 function toggleExpand(id) {
-    const content=document.getElementById(`expand-${id}`);
-    const btnText=document.getElementById(`btn-text-${id}`);
+    const content = document.getElementById(`expand-${id}`);
+    const btnText = document.getElementById(`btn-text-${id}`);
 
     if (!content || !btnText) return;
 
-    const isOpen=content.classList.contains('open');
+    const isOpen = content.classList.contains('open');
 
-    content.classList.toggle('open',!isOpen);
-    btnText.textContent=isOpen?'Leer más':'Ver menos';
+    content.classList.toggle('open', !isOpen);
+    btnText.textContent = isOpen ? 'Leer más' : 'Ver menos';
 
-    // Actualiza la altura para que Streamlit no recorte el contenido.
-    setTimeout(fitFrame,100);
-    setTimeout(fitFrame,500);
+    requestAnimationFrame(() => {
+        fitFrame();
+        requestAnimationFrame(fitFrame);
+    });
+
+    setTimeout(fitFrame, 200);
+    setTimeout(fitFrame, 500);
 }
 
 
@@ -1255,41 +1282,673 @@ def buscar_imagen(nombre):
         f for f in carpeta.iterdir()
         if f.is_file() and f.suffix.lower() in EXTENSIONES
     ]
+import base64
+import html
+import mimetypes
+import re
+from pathlib import Path
+from urllib.parse import urlparse
+
+import streamlit as st
+
+# ==========================================================
+# PORTAFOLIO II — INTERFACES MULTIMODALES & SISTEMAS CIBERFÍSICOS
+# ==========================================================
+
+st.set_page_config(
+    page_title="Portafolio II | Interfaces Multimodales",
+    layout="wide",
+    initial_sidebar_state="expanded",
+)
+
+# ==========================================================
+# CONFIGURACIÓN Y DIRECTORIO DE ARCHIVOS
+# ==========================================================
+
+CARPETA = Path(__file__).resolve().parent
+FOTO = "Blanco.jpg"
+
+
+# ==========================================================
+# FUNCIONES AUXILIARES (CON BÚSQUEDA INTELIGENTE DE IMÁGENES)
+# ==========================================================
+
+def esc(texto):
+    """Evita que los textos introducidos rompan el HTML."""
+    return html.escape(str(texto), quote=True)
+
+
+def buscar_imagen(nombre):
+    """Busca de forma flexible la imagen en el directorio."""
+    archivos = list(CARPETA.glob("*"))
 
     for f in archivos:
-        if f.name.lower()==nombre.lower():
+        if f.name.lower() == nombre.lower():
             return f
 
-    base=Path(nombre).stem.lower()
+    base = Path(nombre).stem.lower()
 
     for f in archivos:
-        if f.stem.lower()==base:
+        if f.stem.lower() == base:
             return f
 
     return None
 
 
-def incrustar_imagenes(html):
+def incrustar_imagenes(html_content):
+    """Reemplaza dinámicamente las rutas de imágenes en el HTML por Base64."""
     def reemplazo(m):
-        f=buscar_imagen(m.group(1))
+        f = buscar_imagen(m.group(1))
 
         if f is None:
             return m.group(0)
 
-        mime=mimetypes.guess_type(f.name)[0] or "image/jpeg"
-        b64=base64.b64encode(f.read_bytes()).decode()
+        mime = mimetypes.guess_type(f.name)[0] or "image/jpeg"
+        b64 = base64.b64encode(f.read_bytes()).decode()
 
         return f'src="data:{mime};base64,{b64}"'
 
     return re.sub(
         r'src="([^"/:]+\.(?:jpe?g|png|webp|gif))"',
         reemplazo,
-        html,
+        html_content,
         flags=re.I
     )
 
 
-HTML=incrustar_imagenes(HTML)
+def cargar_foto(nombre, clase):
+    """Carga la foto principal de la portada de forma integrada."""
+    ruta = buscar_imagen(nombre)
 
+    if ruta and ruta.is_file():
+        mime = mimetypes.guess_type(ruta.name)[0] or "image/jpeg"
+        datos = base64.b64encode(ruta.read_bytes()).decode("utf-8")
+
+        return (
+            f'<img class="{clase}" '
+            f'src="data:{mime};base64,{datos}" '
+            f'alt="Fotografía de prueba">'
+        )
+
+    return """
+    <div class="placeholder">
+        <span>✦</span>
+        <strong>Fotografía de prueba</strong>
+        <small>Agrega el archivo Blanco.jpg</small>
+    </div>
+    """
+
+
+def crear_enlace(url, texto):
+    """Crea un enlace únicamente si se ha configurado una URL válida."""
+    url = str(url).strip()
+    partes = urlparse(url)
+
+    if partes.scheme in ("https", "http") and partes.netloc:
+        return (
+            f'<a class="link-button" href="{esc(url)}" '
+            f'target="_blank" rel="noopener noreferrer">'
+            f'↗ {esc(texto)}</a>'
+        )
+
+    return '<span class="pending">↗ Enlace pendiente</span>'
+
+
+# ==========================================================
+# ESTILOS CSS — ESTÉTICA VINTAGE CREMA Y CAFÉ
+# ==========================================================
+
+st.markdown("""
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono&family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
+
+:root {
+    --dark: #38251d;
+    --coffee: #65442f;
+    --brown: #916a49;
+    --beige: #ead7bb;
+    --cream: #fff8ec;
+    --ink: #402d21;
+}
+
+.stApp {
+    background:
+        radial-gradient(ellipse at 10% 10%, #fff8e9, transparent 38%),
+        linear-gradient(135deg, #e4ceb0, #f6ead7 50%, #dfc4a0);
+    font-family: 'DM Sans', sans-serif;
+    color: var(--ink);
+}
+
+[data-testid="stHeader"] {
+    background: transparent;
+}
+
+.block-container {
+    max-width: 1450px;
+    padding-top: 2rem;
+    padding-bottom: 3rem;
+}
+
+#MainMenu, footer {
+    visibility: hidden;
+}
+
+h1, h2, h3 {
+    font-family: 'Playfair Display', serif !important;
+    color: var(--dark) !important;
+}
+
+p {
+    line-height: 1.8;
+    color: #79634f;
+}
+
+section[data-testid="stSidebar"] {
+    background: linear-gradient(170deg, #493025, #302019);
+}
+
+section[data-testid="stSidebar"] * {
+    color: #f8e9d2 !important;
+}
+
+section[data-testid="stSidebar"] h1,
+section[data-testid="stSidebar"] h2,
+section[data-testid="stSidebar"] h3 {
+    font-family: 'Playfair Display', serif !important;
+}
+
+hr {
+    border: none;
+    height: 1px;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        #98704e,
+        #e0c49e,
+        #98704e,
+        transparent
+    );
+    margin: 2.5rem 0;
+}
+
+/* ==================================================
+   PORTADA (POLAROID IZQUIERDA / TEXTO DERECHA)
+================================================== */
+
+.hero {
+    padding: clamp(2rem, 4vw, 3.5rem);
+    border: 1px solid #d2b99a;
+    border-radius: 26px;
+    background: linear-gradient(125deg, #fff9ed, #ead6b8);
+    box-shadow: 0 18px 42px #573a261f;
+    margin-bottom: 2rem;
+}
+
+.hero-grid {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 3rem;
+    align-items: center;
+}
+
+.eyebrow {
+    font: .72rem 'DM Mono', monospace;
+    letter-spacing: .17em;
+    text-transform: uppercase;
+    color: #946d4b;
+    margin-bottom: 0.5rem;
+}
+
+.hero h1 {
+    font-size: clamp(2.5rem, 4.5vw, 4.2rem);
+    line-height: 1.1;
+    margin: 0.5rem 0 1rem 0;
+}
+
+.hero h1 em {
+    color: #9a714d;
+}
+
+.hero-copy {
+    line-height: 1.8;
+    color: #725942;
+    margin-bottom: 1.5rem;
+}
+
+.tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.tag {
+    padding: 6px 12px;
+    border: 1px solid #cdb393;
+    border-radius: 30px;
+    background: #fff9ef;
+    color: #694a32;
+    font: .7rem 'DM Mono', monospace;
+}
+
+.portrait-frame {
+    padding: 12px 12px 28px;
+    background: #fffaf0;
+    box-shadow: 8px 12px 0 #69482b20, 0 15px 30px #40291924;
+    transform: rotate(-2deg);
+    width: 100%;
+}
+
+.portrait {
+    display: block;
+    width: 100%;
+    height: 240px;
+    object-fit: cover;
+    filter: grayscale(1) contrast(.95);
+    background: #e2d1b8;
+    border-radius: 4px;
+}
+
+.caption {
+    text-align: center;
+    margin-top: 12px;
+    font: .68rem 'DM Mono', monospace;
+    color: #79583e;
+}
+
+/* ==================================================
+   GALERÍA DE 2 COLUMNAS
+================================================== */
+
+.section-title {
+    margin: 3rem 0 1.5rem;
+}
+
+.section-title h2 {
+    font-size: clamp(2rem, 3.5vw, 2.8rem);
+    margin: .3rem 0;
+}
+
+.gallery {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 28px;
+    padding: 10px 0 30px;
+    align-items: start;
+}
+
+/* TARJETAS POLAROID */
+
+.card {
+    position: relative;
+    isolation: isolate;
+    padding: 16px;
+    border: 1px solid #d5bea0;
+    border-radius: 18px;
+    background: linear-gradient(145deg, #fffaf0, #f0dfc7);
+    box-shadow: 0 10px 22px #432d1f20;
+    transition: transform .3s ease, box-shadow .3s ease, border-color .3s ease;
+}
+
+.card:hover {
+    transform: translateY(-6px) scale(1.02);
+    border-color: #65442f;
+    box-shadow: 0 20px 35px #39251d35, 0 0 0 2px #65442f40;
+    background: #fffdf7;
+    z-index: 5;
+}
+
+.polaroid {
+    display: block;
+    width: 100%;
+    height: 210px;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 1px solid #6c4a301c;
+    filter: grayscale(1) contrast(.95);
+    background: #e6d3b6;
+    transition: filter .3s;
+}
+
+.card:hover .polaroid {
+    filter: grayscale(.2);
+}
+
+.meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 14px 2px 8px;
+    font: .65rem 'DM Mono', monospace;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: #987554;
+}
+
+.number {
+    border: 1px solid #d5b995;
+    background: #f6e7d1;
+    border-radius: 50%;
+    padding: 4px 8px;
+    text-align: center;
+}
+
+.card h3 {
+    font: 600 1.25rem/1.2 'Playfair Display', serif !important;
+    margin: 0 2px .5rem !important;
+    color: var(--dark) !important;
+}
+
+.summary {
+    font-size: .88rem;
+    line-height: 1.6;
+    color: #796451;
+    margin-bottom: 1rem;
+    min-height: 2.8rem;
+}
+
+/* DESPLEGABLE LEER MÁS */
+
+.card details {
+    border-top: 1px solid #e0ccb0;
+    padding-top: .8rem;
+    margin-top: .8rem;
+}
+
+.card summary {
+    display: inline-block;
+    list-style: none;
+    cursor: pointer;
+    padding: 8px 14px;
+    border: 1px solid #c8a985;
+    border-radius: 30px;
+    background: #f5e5cf;
+    color: #70472e;
+    font-size: .78rem;
+    font-weight: 600;
+    transition: background .2s;
+}
+
+.card summary::-webkit-details-marker {
+    display: none;
+}
+
+.card summary::after {
+    content: " ＋";
+}
+
+.card details[open] summary::after {
+    content: " −";
+}
+
+.card summary:hover {
+    background: #e7d0b1;
+}
+
+.details-text {
+    color: #6f5845;
+    font-size: .85rem;
+    line-height: 1.7;
+    padding-top: .8rem;
+}
+
+.details-text strong {
+    color: #4a3021;
+}
+
+/* BOTONES DE ENLACE */
+
+.link-button, .pending {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 8px 14px;
+    border-radius: 30px;
+    font-size: .76rem;
+    font-weight: 600;
+    text-decoration: none !important;
+}
+
+.link-button {
+    color: #fff6e9 !important;
+    background: #65442f;
+}
+
+.link-button:hover {
+    background: #3f2a1e;
+}
+
+.pending {
+    border: 1px dashed #b89570;
+    color: #84664a;
+    background: #f2e3ce;
+}
+
+/* RESPONSIVO */
+
+@media (max-width: 900px) {
+    .hero-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    .portrait-frame {
+        max-width: 260px;
+        margin: 0 auto;
+    }
+    .gallery {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+""", unsafe_allow_html=True)
+
+
+# ==========================================================
+# PORTADA PRINCIPAL (FOTO IZQUIERDA / TEXTO DERECHA)
+# ==========================================================
+
+foto_portada = cargar_foto(FOTO, "portrait")
+
+hero_html = f"""
+<section class="hero">
+    <div class="hero-grid">
+        <div class="portrait-frame">
+            {foto_portada}
+            <div class="caption">PORTAFOLIO II · IoT & CIBERFÍSICOS</div>
+        </div>
+        <div>
+            <div class="eyebrow">Cuaderno digital · Semestre II · Edición 02</div>
+            <h1>Interfaces<br><em>multimodales.</em></h1>
+            <div class="hero-copy">
+                Bienvenido a mi archivo de experimentación. Este espacio documenta la convergencia entre 
+                el mundo digital y el entorno físico a través de <strong>Sistemas Ciberfísicos e Internet de las Cosas (IoT)</strong>. 
+                Mediante protocolos de comunicación como MQTT, simulaciones interactivas en Wokwi y control por voz, 
+                exploro cómo integrar actuadores, iluminación y servomotores en espacios inteligentes.
+            </div>
+            <div class="tags">
+                <span class="tag">🌐 Protocolo MQTT</span>
+                <span class="tag">⚡ Wokwi Simulación</span>
+                <span class="tag">🎙️ Control por Voz</span>
+                <span class="tag">🤖 Sistemas Ciberfísicos</span>
+            </div>
+        </div>
+    </div>
+</section>
+"""
+
+st.markdown(incrustar_imagenes(hero_html), unsafe_allow_html=True)
+
+
+# ==========================================================
+# BARRA LATERAL
+# ==========================================================
+
+with st.sidebar:
+    st.markdown("# Archivo creativo")
+    st.markdown("**PORTAFOLIO · ETAPA CIBERFÍSICA**")
+    st.write("Recopilación de aplicaciones desplegadas y simulaciones virtuales de IoT.")
+    st.markdown("---")
+    st.markdown("### Contenido del Cuaderno")
+    st.markdown("""
+    - 📡 Recepción de Datos MQTT
+    - 🕹️ Telecontrol Web & Actuadores
+    - 🎙️ Control Multimodal por Voz
+    - ⚙️ Simulación Wokwi (Servos y LEDs)
+    - 📖 Documentación & Repositorios
+    """)
+    st.markdown("---")
+    st.caption("Interfaces Multimodales · Desarrollado en Streamlit.")
+
+
+# ==========================================================
+# LÍNEA DIVISORIA ESTÉTICA Y TÍTULO
+# ==========================================================
+
+st.markdown("<hr>", unsafe_allow_html=True)
+
+st.markdown("""
+<div class="section-title">
+    <div class="eyebrow">Galería de procesos · 01—08</div>
+    <h2>Actividades prácticas realizadas</h2>
+    <p>Pasa el cursor sobre las tarjetas tipo Polaroid para ver la animación y abre los enlaces para probar las aplicaciones en vivo.</p>
+</div>
+""", unsafe_allow_html=True)
+
+
+# ==========================================================
+# DATOS DE LAS 8 ACTIVIDADES
+# ==========================================================
+
+actividades = [
+    {
+        "titulo": "Recepción de Datos MQTT",
+        "categoria": "IoT & Telemetría · 01",
+        "resumen": "Monitoreo en tiempo real de telemetría desde un sensor analógico simulado en Wokwi hacia la app en Streamlit.",
+        "descripcion": "Se organizó bajo la arquitectura cliente-broker: Wokwi actúa como cliente publicador enviando datos de un sensor a un broker MQTT en un tópico específico, mientras Streamlit funciona como cliente suscriptor leyendo ese mismo tópico.",
+        "aprendizaje": "Entendí el patrón Publish/Subscribe, la intermediación del broker y la recepción continua de telemetría en un cliente web.",
+        "url": "https://recepmqtt-c632mej72ce2uypzr9henl.streamlit.app/",
+        "boton": "Abrir recurso"
+    },
+    {
+        "titulo": "Publicación y Telecontrol MQTT",
+        "categoria": "Ciberfísicos · 02",
+        "resumen": "Telecontrol bidireccional desde la interfaz web para activar LEDs y un servomotor en el simulador Wokwi.",
+        "descripcion": "La app en Streamlit funciona como cliente publicador enviando instrucciones a un tópico del broker MQTT. El microcontrolador en Wokwi actúa como cliente suscriptor en ese tópico para accionar luces y el servomotor en tiempo real.",
+        "aprendizaje": "Aprendí a estructurar payload de control web y enviarlo a través de un broker MQTT hacia actuadores remotos.",
+        "url": "https://sendcmqttsimon-5e3raacaadr2kz3jago5z9.streamlit.app/",
+        "boton": "Abrir recurso"
+    },
+    {
+        "titulo": "Control Multimodal por Voz",
+        "categoria": "Voz & Actuadores · 03",
+        "resumen": "Control de luces y puertas mediante comandos vocales procesados en la web y transmitidos al simulador.",
+        "descripcion": "Un cliente web captura y traduce órdenes de voz en variables que se publican al broker MQTT dentro de un tópico de control. En Wokwi, el cliente suscriptor recibe la indicación y ejecuta la acción en el servomotor o LEDs.",
+        "aprendizaje": "A integrar voz como entrada multimodal y mapear frases con comandos transmitidos por un broker MQTT.",
+        "url": "https://ctrlvoicesimon-skzxvxkj3e8l323ky3i5bp.streamlit.app/",
+        "boton": "Abrir recurso"
+    },
+    {
+        "titulo": "Simulación Wokwi & Servomotor",
+        "categoria": "Hardware · 04",
+        "resumen": "Configuración del circuito electrónico y lógica del microcontrolador para señales analógicas.",
+        "descripcion": "Montaje en el entorno de desarrollo Wokwi conectando sensores analógicos y servos en ESP32/Arduino, verificando la respuesta de los componentes antes del despliegue físico.",
+        "aprendizaje": "Prototipado rápido de circuitos virtuales, programación de servomotores y depuración de señales analógicas.",
+        "url": "",
+        "boton": "Abrir recurso"
+    },
+    {
+        "titulo": "Actividad práctica cinco",
+        "categoria": "Práctica · 05",
+        "resumen": "Espacio reservado para la quinta actividad del semestre.",
+        "descripcion": "Descripción provisional de la actividad práctica desarrollada en clase.",
+        "aprendizaje": "Reflexión y conceptos clave aprendidos durante la sesión.",
+        "url": "",
+        "boton": "Abrir recurso"
+    },
+    {
+        "titulo": "Actividad práctica seis",
+        "categoria": "Práctica · 06",
+        "resumen": "Espacio reservado para la sexta actividad del semestre.",
+        "descripcion": "Descripción provisional de la actividad práctica desarrollada en clase.",
+        "aprendizaje": "Reflexión y conceptos clave aprendidos durante la sesión.",
+        "url": "",
+        "boton": "Abrir recurso"
+    },
+    {
+        "titulo": "Actividad práctica siete",
+        "categoria": "Práctica · 07",
+        "resumen": "Espacio reservado para la séptima actividad del semestre.",
+        "descripcion": "Descripción provisional de la actividad práctica desarrollada en clase.",
+        "aprendizaje": "Reflexión y conceptos clave aprendidos durante la sesión.",
+        "url": "",
+        "boton": "Abrir recurso"
+    },
+    {
+        "titulo": "Actividad práctica ocho",
+        "categoria": "Proyecto Final · 08",
+        "resumen": "Integración total del portafolio e interfaces multimodales.",
+        "descripcion": "Consolidación de proyectos del semestre y presentación del portafolio integrando IoT y control por voz.",
+        "aprendizaje": "Despliegue continuo en GitHub y Streamlit Cloud.",
+        "url": "",
+        "boton": "Abrir recurso"
+    },
+]
+
+
+# ==========================================================
+# FUNCIÓN PARA CREAR CADA TARJETA
+# ==========================================================
+
+def tarjeta(actividad, numero):
+    foto = cargar_foto(FOTO, "polaroid")
+    boton = crear_enlace(actividad["url"], actividad["boton"])
+
+    card_html = f"""
+    <article class="card">
+        {foto}
+        <div class="meta">
+            <span>{esc(actividad["categoria"])}</span>
+            <span class="number">{numero:02d}</span>
+        </div>
+        <h3>{esc(actividad["titulo"])}</h3>
+        <div class="summary">
+            {esc(actividad["resumen"])}
+        </div>
+        <details>
+            <summary>Leer más información</summary>
+            <div class="details-text">
+                <p>{esc(actividad["descripcion"])}</p>
+                <p>
+                    <strong>Lo que me llevo:</strong>
+                    {esc(actividad["aprendizaje"])}
+                </p>
+                {boton}
+            </div>
+        </details>
+    </article>
+    """
+    return incrustar_imagenes(card_html)
+
+
+# ==========================================================
+# CONSTRUIR Y MOSTRAR LA GALERÍA (2 COLUMNAS)
+# ==========================================================
+
+galeria = "".join(
+    tarjeta(actividad, numero)
+    for numero, actividad in enumerate(actividades, start=1)
+)
+
+st.markdown(f'<div class="gallery">{galeria}</div>', unsafe_allow_html=True)
+
+
+# ==========================================================
+# PIE DE PÁGINA
+# ==========================================================
+
+st.markdown("""
+<hr>
+<div style="padding: 16px; border: 1px solid #d2b895; border-radius: 14px; background: #fff9eea8; color: #765a43; text-align: center; font-size: 0.9rem;">
+    ✦ <strong>Interfaces Multimodales & IoT:</strong> Código listo para sincronizar con GitHub y desplegar en Streamlit Cloud.
+</div>
+""", unsafe_allow_html=True)
 # El iframe ajusta su altura al contenido mediante JavaScript.
 components.html(HTML,height=3000,scrolling=False)
