@@ -12,6 +12,7 @@ st.markdown(
     <style>
       header, footer, #MainMenu {visibility: hidden;}
       .block-container {padding: 0 !important; max-width: 100% !important;}
+      iframe {display: block;}
     </style>
     """,
     unsafe_allow_html=True,
@@ -51,7 +52,6 @@ HTML = r"""<!DOCTYPE html>
                 linear-gradient(135deg, #e4ceb0, #f6ead7 50%, #dfc4a0);
             font-family: 'DM Sans', sans-serif;
             color: var(--ink-text);
-            min-height: 100vh;
         }
 
         h1, h2, h3, .font-serif-custom {
@@ -186,7 +186,7 @@ HTML = r"""<!DOCTYPE html>
         }
 
         /* ============ TOQUES EXTRA ============ */
-        html { scroll-behavior: smooth; }
+        html { scroll-behavior: smooth; overflow-y: hidden; }
 
         /* Textura de papel (grano) sobre toda la página */
         body::after {
@@ -200,13 +200,6 @@ HTML = r"""<!DOCTYPE html>
             background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .3 0 0 0 0 .2 0 0 0 0 .12 0 0 0 .9 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
         }
 
-        /* Barra de progreso de lectura */
-        #progress {
-            position: fixed; top: 0; left: 0; height: 4px; width: 0;
-            background: linear-gradient(90deg, #a8583b, #d9a441, #e8c27a);
-            box-shadow: 0 0 10px rgba(217,164,65,.7);
-            z-index: 100; transition: width .1s linear;
-        }
 
         /* Chispitas ✦ que salen del borde */
         .sparkle {
@@ -225,20 +218,7 @@ HTML = r"""<!DOCTYPE html>
         .reveal.in { animation: reveal .8s cubic-bezier(.2,.8,.2,1) backwards; }
         @keyframes reveal { from { opacity: 0; translate: 0 38px; } }
 
-        /* Cinta washi (cinta adhesiva) en polaroids */
         .portrait-frame { position: relative; }
-        .polaroid-card::before, .washi {
-            content: ''; position: absolute; top: -12px; left: 50%;
-            width: 96px; height: 26px; margin-left: -48px; z-index: 3;
-            background: repeating-linear-gradient(90deg, rgba(213,190,160,.75) 0 8px, rgba(240,224,198,.75) 8px 16px);
-            border: 1px dashed rgba(145,106,73,.35);
-            box-shadow: 0 2px 5px rgba(56,37,29,.15);
-            transform: rotate(-3deg);
-            transition: transform .35s ease;
-        }
-        .washi { content: none; }
-        .polaroid-card:nth-child(2n)::before { transform: rotate(3deg); }
-        .polaroid-card:hover::before { transform: rotate(0deg) translateY(-3px); }
 
         /* Brillo que cruza la foto + resplandor dorado en la card */
         .polaroid-img-wrapper::after {
@@ -286,20 +266,6 @@ HTML = r"""<!DOCTYPE html>
             50%     { transform: translateY(-14px) rotate(25deg) scale(1.2); opacity: .95; }
         }
 
-        /* Cinta animada (ticker) */
-        .ticker-wrap { overflow: hidden; padding: .8rem 0; }
-        .ticker {
-            overflow: hidden; background: var(--dark-coffee); color: #e8d5bf;
-            border-top: 2px solid #916a49; border-bottom: 2px solid #916a49;
-            transform: rotate(-1deg); box-shadow: 0 8px 18px rgba(56,37,29,.25);
-        }
-        .ticker-track { display: flex; width: max-content; animation: marquee 30s linear infinite; }
-        .ticker-track span {
-            font-family: 'DM Mono', monospace; font-size: .78rem; letter-spacing: .25em;
-            text-transform: uppercase; padding: .75rem 1.4rem; white-space: nowrap;
-        }
-        .ticker-track span b { color: #d9a441; font-weight: 500; }
-        @keyframes marquee { to { transform: translateX(-50%); } }
 
         /* Menú lateral con vida */
         .nav-item { transition: transform .25s ease, color .25s ease; }
@@ -340,11 +306,10 @@ HTML = r"""<!DOCTYPE html>
         }
     </style>
 </head>
-<body class="flex flex-col md:flex-row min-h-screen">
-    <div id="progress"></div>
+<body class="flex flex-col md:flex-row">
 
     <!-- SIDEBAR -->
-    <aside class="sidebar w-full md:w-72 p-6 flex-shrink-0 flex flex-col justify-between border-r border-[#65442f]/30 md:sticky md:top-0 md:h-screen md:self-start md:overflow-y-auto">
+    <aside class="sidebar w-full md:w-72 p-6 flex-shrink-0 flex flex-col justify-between border-r border-[#65442f]/30">
         <div>
             <div class="mb-8">
                 <h1 class="text-2xl font-bold text-[#f8e9d2] mb-1 font-serif-custom" style="color:#f8e9d2">Archivo Creativo</h1>
@@ -382,7 +347,6 @@ HTML = r"""<!DOCTYPE html>
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
                 <div class="lg:col-span-4 flex justify-center lg:justify-start">
                     <div class="portrait-frame p-3 pb-4 max-w-[320px] w-full rounded-sm">
-                        <div class="washi"></div>
                         <div class="w-full h-48 md:h-52 bg-[#e2d1b8] rounded overflow-hidden">
                             <img src="blanco.jpeg"
                                  onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'img-fallback\'><span class=\'text-2xl\'>✦</span><strong class=\'text-xs mt-1\'>Fotografía de prueba</strong><small class=\'text-[10px] opacity-75 font-mono-custom\'>blanco.jpeg</small></div>';"
@@ -418,9 +382,6 @@ HTML = r"""<!DOCTYPE html>
             </div>
         </section>
 
-        <div class="ticker-wrap" aria-hidden="true">
-            <div class="ticker"><div class="ticker-track"><span>Diseño interactivo <b>✦</b></span><span>Experimentación <b>✦</b></span><span>Aprender haciendo <b>✦</b></span><span>Edición vintage <b>✦</b></span><span>Interfaces multimodales <b>✦</b></span><span>Curiosidad y café <b>✦</b></span><span>Diseño interactivo <b>✦</b></span><span>Experimentación <b>✦</b></span><span>Aprender haciendo <b>✦</b></span><span>Edición vintage <b>✦</b></span><span>Interfaces multimodales <b>✦</b></span><span>Curiosidad y café <b>✦</b></span></div></div>
-        </div>
         <hr class="vintage-divider">
 
         <div class="mb-8">
@@ -550,7 +511,10 @@ HTML = r"""<!DOCTYPE html>
         // Ajusta la altura del iframe de Streamlit a la pantalla (así el menú lateral y la barra de progreso funcionan)
         function fitFrame() {
             try {
-                if (window.frameElement) window.frameElement.style.height = window.parent.innerHeight + 'px';
+                if (window.frameElement) {
+                    const alto = Math.ceil(document.body.getBoundingClientRect().height);
+                    window.frameElement.style.height = alto + 'px';
+                }
             } catch (e) {}
         }
 
@@ -630,18 +594,13 @@ HTML = r"""<!DOCTYPE html>
                 });
             });
 
-            // Barra de progreso
-            const bar = document.getElementById('progress');
-            function updateProgress() {
-                const max = document.documentElement.scrollHeight - window.innerHeight;
-                bar.style.width = (max > 0 ? (window.scrollY / max) * 100 : 0) + '%';
-            }
-            window.addEventListener('scroll', updateProgress, { passive: true });
-            updateProgress();
 
+            // El iframe se estira al alto real del contenido: así solo existe la barra de scroll del navegador
             fitFrame();
+            if ('ResizeObserver' in window) new ResizeObserver(fitFrame).observe(document.body);
+            window.addEventListener('load', fitFrame);
             window.addEventListener('resize', fitFrame);
-            try { window.parent.addEventListener('resize', fitFrame); } catch (e) {}
+            if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitFrame);
         });
     </script>
 </body>
@@ -655,4 +614,4 @@ if img.exists():
     b64 = base64.b64encode(img.read_bytes()).decode()
     HTML = HTML.replace('src="blanco.jpeg"', f'src="data:image/jpeg;base64,{b64}"')
 
-components.html(HTML, height=900, scrolling=True)
+components.html(HTML, height=3400, scrolling=False)
