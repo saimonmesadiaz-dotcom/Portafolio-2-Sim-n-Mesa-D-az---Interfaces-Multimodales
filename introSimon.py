@@ -54,7 +54,7 @@ def cargar_foto(nombre, clase):
     <div class="placeholder">
         <span>✦</span>
         <strong>Fotografía de prueba</strong>
-        <small>Agrega el archivo Blanco.jpg</small>
+        <small>Agrega el archivo Blanco.jpeg</small>
     </div>
     """
 
