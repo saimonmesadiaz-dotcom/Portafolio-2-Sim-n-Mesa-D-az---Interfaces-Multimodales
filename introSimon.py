@@ -702,12 +702,21 @@ HTML = r"""<!DOCTYPE html>
 </html>
 """
 
-# Incrusta blanco.jpeg (debe estar en la misma carpeta que app.py).
-# Si no existe, se muestra el recuadro de respaldo del diseño.
-img = Path(__file__).parent / "blanco.jpeg"
-if img.exists():
-    b64 = base64.b64encode(img.read_bytes()).decode()
-    HTML = HTML.replace('src="blanco.jpeg"', f'src="data:image/jpeg;base64,{b64}"')
+import re
+import mimetypes
 
-# La altura se ajusta sola al contenido (JavaScript), así solo existe el scroll del navegador.
-components.html(HTML, height=3000, scrolling=False)
+def incrustar_imagenes(html):
+    carpeta = Path(__file__).parent
+
+    def reemplazo(m):
+        nombre = m.group(1)
+        for f in carpeta.iterdir():
+            if f.name.lower() == nombre.lower():  # no distingue mayúsculas
+                mime = mimetypes.guess_type(f.name)[0] or "image/jpeg"
+                b64 = base64.b64encode(f.read_bytes()).decode()
+                return f'src="data:{mime};base64,{b64}"'
+        return m.group(0)  # si no existe, se muestra el recuadro de respaldo
+
+    return re.sub(r'src="([^"/:]+\.(?:jpe?g|png|webp|gif))"', reemplazo, html, flags=re.I)
+
+HTML = incrustar_imagenes(HTML)
