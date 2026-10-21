@@ -209,11 +209,11 @@ HTML = r"""<!DOCTYPE html>
             width: 100%;
             height: 100%;
             object-fit: cover;
-            filter: grayscale(0.85) contrast(0.95);
-            transition: filter 0.4s ease, transform 0.4s ease;
+            filter: sepia(0.9) saturate(0.85) contrast(0.95) brightness(0.98);
+            transition: filter 0.5s ease, transform 0.4s ease;
         }
         .polaroid-card:hover .polaroid-img {
-            filter: grayscale(0.15) contrast(1);
+            filter: sepia(0) saturate(1) contrast(1) brightness(1);
             transform: scale(1.03);
         }
 
@@ -396,7 +396,7 @@ HTML = r"""<!DOCTYPE html>
                             <img id="foto-portada" src="Simon.jpeg"
                                  onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'img-fallback\'><span class=\'text-2xl\'>✦</span><strong class=\'text-xs mt-1\'>Fotografía de prueba</strong><small class=\'text-[10px] opacity-75 font-mono-custom\'>Simon.jpeg</small></div>';"
                                  alt="Fotografía de portada"
-                                 class="w-full h-full object-cover filter grayscale contrast-95">
+                                 class="w-full h-full object-cover">
                         </div>
                         <div class="text-center mt-3 font-mono-custom text-xs text-[#79583e] tracking-wider uppercase font-semibold">
                             SIMÓN MESA DÍAZ · PORTAFOLIO II
