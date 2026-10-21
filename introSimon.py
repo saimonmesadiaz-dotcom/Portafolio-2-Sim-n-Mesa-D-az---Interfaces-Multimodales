@@ -1,4 +1,3 @@
-
 import base64
 import mimetypes
 import re
@@ -199,6 +198,11 @@ SIDEBAR_HTML = """
 </div>
 """
 
+# CORRECCIÓN: Markdown interpreta las líneas con 4+ espacios de sangría
+# (después de una línea en blanco) como bloque de código y rompe el HTML.
+# Se compacta el HTML quitando sangrías y saltos de línea.
+SIDEBAR_HTML = "".join(linea.strip() for linea in SIDEBAR_HTML.splitlines())
+
 st.sidebar.markdown(SIDEBAR_HTML, unsafe_allow_html=True)
 
 
@@ -271,6 +275,21 @@ h1,h2,h3,.font-serif-custom {
     box-shadow:0 18px 42px rgba(87,58,38,.12);
 }
 
+/* CORRECCIÓN: la card de portada es un poco más alta/larga */
+@media (min-width:768px) {
+    .hero-box {
+        padding-top:3.5rem !important;
+        padding-bottom:3.5rem !important;
+        min-height:480px;
+        display:flex;
+        align-items:center;
+    }
+
+    .hero-box > .grid {
+        width:100%;
+    }
+}
+
 .portrait-frame {
     position:relative;
     background:#fffaf0;
@@ -287,6 +306,11 @@ h1,h2,h3,.font-serif-custom {
     grid-template-columns:repeat(3,minmax(0,1fr));
     gap:2.2rem 1.8rem;
     align-items:stretch;
+}
+
+/* CORRECCIÓN: mientras haya una card abierta, las demás no se estiran */
+.gallery-grid.has-open {
+    align-items:start;
 }
 
 .polaroid-card {
@@ -1190,23 +1214,112 @@ function renderCards() {
 
 // ============================================================
 // BOTÓN LEER MÁS / VER MENOS
+// Cada card se abre y se cierra de forma independiente.
+//
+// Problema original: la grilla usa align-items:stretch, así que
+// al abrir una card las demás de su fila se estiraban con ella.
+// Solución: al abrir la primera card, se "congela" la altura
+// original de las demás; al cerrar la última, se restaura todo.
 // ============================================================
+
+function getContainer() {
+    return document.getElementById('cardsContainer');
+}
+
+function tarjetasAbiertas() {
+    return getContainer().querySelectorAll('.expandable-content.open').length;
+}
+
+function tarjetasNormales() {
+    return getContainer().querySelectorAll('.polaroid-card:not(.polaroid-card-wide)');
+}
+
+function congelarAlturas() {
+    const container=getContainer();
+
+    // Se mide ANTES de abrir nada, con todas las cards en su estado original.
+    tarjetasNormales().forEach(c=>{
+        const h=c.offsetHeight;
+        c.dataset.h=h;
+        c.style.height=h+'px';
+    });
+
+    container.classList.add('has-open');
+}
+
+function liberarAlturas() {
+    const container=getContainer();
+
+    tarjetasNormales().forEach(c=>{
+        c.style.height='';
+        delete c.dataset.h;
+    });
+
+    container.classList.remove('has-open');
+}
 
 function toggleExpand(id) {
     const content=document.getElementById(`expand-${id}`);
     const btnText=document.getElementById(`btn-text-${id}`);
+    const card=document.getElementById(`card-${id}`);
 
-    if (!content || !btnText) return;
+    if (!content || !btnText || !card) return;
 
+    const esAncha=card.classList.contains('polaroid-card-wide');
     const isOpen=content.classList.contains('open');
 
-    content.classList.toggle('open',!isOpen);
-    btnText.textContent=isOpen?'Leer más':'Ver menos';
+    if (!isOpen) {
+        // ABRIR: solo esta card crece; las demás conservan su altura.
+        if (tarjetasAbiertas()===0) congelarAlturas();
+
+        if (!esAncha) card.style.height='auto';
+
+        content.classList.add('open');
+        btnText.textContent='Ver menos';
+    } else {
+        // CERRAR: esta card vuelve a su estado original.
+        content.classList.remove('open');
+        btnText.textContent='Leer más';
+
+        setTimeout(()=>{
+            // Si la volvieron a abrir mientras tanto, no hacer nada.
+            if (content.classList.contains('open')) return;
+
+            if (tarjetasAbiertas()===0) {
+                liberarAlturas();
+            } else if (!esAncha && card.dataset.h) {
+                card.style.height=card.dataset.h+'px';
+            }
+
+            fitFrame();
+        },480);
+    }
 
     // Actualiza la altura para que Streamlit no recorte el contenido.
     setTimeout(fitFrame,100);
     setTimeout(fitFrame,500);
 }
+
+// Si cambia el ANCHO de la ventana, las alturas congeladas dejan de
+// ser válidas: se cierran todas las cards y se restaura la grilla.
+// (Cambios de alto del iframe se ignoran a propósito.)
+let anchoPrevio=window.innerWidth;
+
+window.addEventListener('resize',()=>{
+    if (window.innerWidth===anchoPrevio) return;
+    anchoPrevio=window.innerWidth;
+
+    document.querySelectorAll('.expandable-content.open').forEach(c=>{
+        c.classList.remove('open');
+    });
+
+    document.querySelectorAll('[id^="btn-text-"]').forEach(b=>{
+        b.textContent='Leer más';
+    });
+
+    liberarAlturas();
+    fitFrame();
+});
 
 
 // ============================================================
