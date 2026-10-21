@@ -1,4 +1,3 @@
-
 import base64
 import html
 import mimetypes
@@ -22,7 +21,7 @@ st.set_page_config(
 # ==========================================================
 
 CARPETA = Path(__file__).resolve().parent
-FOTO = "Blanco.jpeg"
+FOTO = "Blanco.jpg"
 
 
 # ==========================================================
@@ -36,9 +35,8 @@ def esc(texto):
 
 def cargar_foto(nombre, clase):
     """
-    Carga una imagen local y la convierte en una imagen
-    integrada en la página. Si no existe, muestra un espacio
-    provisional para que la aplicación no falle.
+    Carga una imagen local y la convierte en una imagen integrada.
+    Si no existe, muestra un espacio provisional.
     """
     ruta = CARPETA / nombre
 
@@ -49,7 +47,7 @@ def cargar_foto(nombre, clase):
         return (
             f'<img class="{clase}" '
             f'src="data:{mime};base64,{datos}" '
-            f'alt="Fotografía de prueba en blanco y negro">'
+            f'alt="Fotografía de prueba">'
         )
 
     return """
@@ -77,7 +75,7 @@ def crear_enlace(url, texto):
 
 
 # ==========================================================
-# ESTILOS CSS — ESTÉTICA VINTAGE
+# ESTILOS CSS — ESTÉTICA VINTAGE CREMA Y CAFÉ
 # ==========================================================
 
 st.markdown("""
@@ -111,8 +109,7 @@ st.markdown("""
     padding-bottom: 3rem;
 }
 
-#MainMenu,
-footer {
+#MainMenu, footer {
     visibility: hidden;
 }
 
@@ -151,27 +148,26 @@ hr {
         #98704e,
         transparent
     );
-    margin: 2rem 0;
+    margin: 2.5rem 0;
 }
 
 /* ==================================================
-   PORTADA
+   PORTADA (POLAROID IZQUIERDA / TEXTO DERECHA)
 ================================================== */
 
 .hero {
-    padding: clamp(1.5rem, 4vw, 3.5rem);
+    padding: clamp(2rem, 4vw, 3.5rem);
     border: 1px solid #d2b99a;
     border-radius: 26px;
     background: linear-gradient(125deg, #fff9ed, #ead6b8);
     box-shadow: 0 18px 42px #573a261f;
-    overflow: hidden;
-    position: relative;
+    margin-bottom: 2rem;
 }
 
 .hero-grid {
     display: grid;
-    grid-template-columns: 1.6fr .7fr;
-    gap: 2rem;
+    grid-template-columns: 280px 1fr;
+    gap: 3rem;
     align-items: center;
 }
 
@@ -180,12 +176,13 @@ hr {
     letter-spacing: .17em;
     text-transform: uppercase;
     color: #946d4b;
+    margin-bottom: 0.5rem;
 }
 
 .hero h1 {
-    font-size: clamp(2.7rem, 5.5vw, 5rem);
-    line-height: 1;
-    margin: 1rem 0;
+    font-size: clamp(2.5rem, 4.5vw, 4.2rem);
+    line-height: 1.1;
+    margin: 0.5rem 0 1rem 0;
 }
 
 .hero h1 em {
@@ -193,19 +190,19 @@ hr {
 }
 
 .hero-copy {
-    line-height: 1.9;
+    line-height: 1.8;
     color: #725942;
+    margin-bottom: 1.5rem;
 }
 
 .tags {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
-    margin-top: 20px;
 }
 
 .tag {
-    padding: 7px 11px;
+    padding: 6px 12px;
     border: 1px solid #cdb393;
     border-radius: 30px;
     background: #fff9ef;
@@ -214,22 +211,21 @@ hr {
 }
 
 .portrait-frame {
-    padding: 10px 10px 28px;
+    padding: 12px 12px 28px;
     background: #fffaf0;
     box-shadow: 8px 12px 0 #69482b20, 0 15px 30px #40291924;
-    transform: rotate(3deg);
-    animation: float 5s ease-in-out infinite;
-    max-width: 270px;
-    margin: auto;
+    transform: rotate(-2deg);
+    width: 100%;
 }
 
 .portrait {
     display: block;
     width: 100%;
-    height: 260px;
+    height: 240px;
     object-fit: cover;
     filter: grayscale(1) contrast(.95);
     background: #e2d1b8;
+    border-radius: 4px;
 }
 
 .caption {
@@ -239,245 +235,72 @@ hr {
     color: #79583e;
 }
 
-@keyframes float {
-    0%, 100% {
-        transform: translateY(0) rotate(3deg);
-    }
-
-    50% {
-        transform: translateY(-7px) rotate(1deg);
-    }
-}
-
 /* ==================================================
-   GALERÍA DE TARJETAS
+   GALERÍA DE 2 COLUMNAS
 ================================================== */
 
 .section-title {
-    margin: 3rem 0 1rem;
+    margin: 3rem 0 1.5rem;
 }
 
 .section-title h2 {
-    font-size: clamp(2rem, 4vw, 3.1rem);
-    margin: .5rem 0;
+    font-size: clamp(2rem, 3.5vw, 2.8rem);
+    margin: .3rem 0;
 }
 
 .gallery {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 24px;
-    padding: 12px 4px 30px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 28px;
+    padding: 10px 0 30px;
     align-items: start;
 }
 
 /* TARJETAS POLAROID */
 
 .card {
-    --tilt: 0deg;
-
     position: relative;
     isolation: isolate;
-    min-width: 0;
-    padding: 12px 12px 18px;
-
+    padding: 16px;
     border: 1px solid #d5bea0;
-    border-radius: 15px;
-
+    border-radius: 18px;
     background: linear-gradient(145deg, #fffaf0, #f0dfc7);
-
     box-shadow: 0 10px 22px #432d1f20;
-
-    transform: rotate(var(--tilt));
-
-    transition:
-        transform .35s ease,
-        box-shadow .35s ease,
-        filter .35s ease,
-        background .35s ease;
-
-    animation: appear .65s both;
+    transition: transform .3s ease, box-shadow .3s ease, border-color .3s ease;
 }
 
-.card:nth-child(3n+1) {
-    --tilt: -.6deg;
-}
+/* EFECTO HOVER: SE AGRANDA Y BORDE CAFÉ */
 
-.card:nth-child(3n+2) {
-    --tilt: .5deg;
-}
-
-.card:nth-child(3n) {
-    --tilt: -.25deg;
-}
-
-/* BORDE BRILLANTE */
-
-.card::before {
-    content: "";
-    position: absolute;
-    z-index: -1;
-    inset: -5px;
-    border-radius: 19px;
-
-    background: conic-gradient(
-        transparent,
-        #d4a56f,
-        transparent 25%,
-        #b68a5f,
-        transparent 60%,
-        #edcb91,
-        transparent
-    );
-
-    opacity: 0;
-    filter: blur(8px);
-    transition: opacity .3s;
-}
-
-/* DESTELLOS */
-
-.card::after {
-    content: "✦  ✧  ✦";
-    position: absolute;
-    right: 12px;
-    top: -17px;
-
-    color: #a87543;
-    letter-spacing: 5px;
-
-    opacity: 0;
-    transform: translateY(5px);
-
-    transition: all .3s;
-    pointer-events: none;
-}
-
-/* INTERACCIÓN AL PASAR EL CURSOR */
-
-.card:hover,
-.card:focus-within {
-    z-index: 5;
-
-    transform: translateY(-8px) scale(1.035) rotate(0);
-
+.card:hover {
+    transform: translateY(-6px) scale(1.02);
+    border-color: #65442f;
+    box-shadow: 0 20px 35px #39251d35, 0 0 0 2px #65442f40;
     background: #fffdf7;
-
-    box-shadow:
-        0 24px 40px #39251d40,
-        0 0 0 2px #9b6f4830;
-}
-
-.card:hover::before,
-.card:focus-within::before {
-    opacity: .8;
-    animation: spin 6s linear infinite;
-}
-
-.card:hover::after,
-.card:focus-within::after {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-/* OSCURECER LAS TARJETAS NO SELECCIONADAS */
-
-.gallery:has(.card:hover) .card:not(:hover) {
-    filter: brightness(.88) saturate(.8);
-    transform: scale(.985) rotate(var(--tilt));
-}
-
-@keyframes spin {
-    to {
-        transform: rotate(360deg);
-    }
-}
-
-@keyframes appear {
-    from {
-        opacity: 0;
-        translate: 0 15px;
-    }
-
-    to {
-        opacity: 1;
-        translate: 0 0;
-    }
-}
-
-/* IMÁGENES */
-
-.polaroid,
-.placeholder {
-    display: block;
-    box-sizing: border-box;
-    width: 100%;
-    height: 205px;
-
-    object-fit: cover;
-
-    border-radius: 7px;
-    border: 1px solid #6c4a301c;
-
-    background: #e6d3b6;
+    z-index: 5;
 }
 
 .polaroid {
+    display: block;
+    width: 100%;
+    height: 210px;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 1px solid #6c4a301c;
     filter: grayscale(1) contrast(.95);
-    transition: filter .3s, transform .3s;
+    background: #e6d3b6;
+    transition: filter .3s;
 }
 
 .card:hover .polaroid {
-    filter: grayscale(.3);
-    transform: scale(.99);
+    filter: grayscale(.2);
 }
-
-/* ESPACIO PROVISIONAL SI NO HAY FOTO */
-
-.placeholder {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-
-    border: 1px dashed #b89a78;
-
-    color: #805d45;
-    text-align: center;
-    padding: 10px;
-
-    background: repeating-linear-gradient(
-        45deg,
-        #f2e2cb,
-        #f2e2cb 10px,
-        #ead7bb 10px,
-        #ead7bb 11px
-    );
-}
-
-.placeholder span {
-    font-size: 2.5rem;
-}
-
-.placeholder strong {
-    font-size: .8rem;
-}
-
-.placeholder small {
-    font: .62rem 'DM Mono', monospace;
-}
-
-/* INFORMACIÓN DE CADA TARJETA */
 
 .meta {
     display: flex;
     justify-content: space-between;
-    gap: 8px;
     align-items: center;
-
-    margin: 15px 2px 9px;
-
-    font: .64rem 'DM Mono', monospace;
+    margin: 14px 2px 8px;
+    font: .65rem 'DM Mono', monospace;
     text-transform: uppercase;
     letter-spacing: .06em;
     color: #987554;
@@ -487,50 +310,43 @@ hr {
     border: 1px solid #d5b995;
     background: #f6e7d1;
     border-radius: 50%;
-    padding: 7px;
-    min-width: 15px;
+    padding: 4px 8px;
     text-align: center;
 }
 
 .card h3 {
-    font: 600 1.3rem/1.25 'Playfair Display', serif !important;
-    text-align: left !important;
-    min-height: 3rem;
-    margin: 0 2px .6rem !important;
+    font: 600 1.25rem/1.2 'Playfair Display', serif !important;
+    margin: 0 2px .5rem !important;
+    color: var(--dark) !important;
 }
 
 .summary {
-    min-height: 4.2rem;
-    font-size: .85rem;
-    line-height: 1.7;
+    font-size: .88rem;
+    line-height: 1.6;
     color: #796451;
     margin-bottom: 1rem;
+    min-height: 2.8rem;
 }
 
-/* DESPLEGABLE */
+/* DESPLEGABLE LEER MÁS */
 
 .card details {
     border-top: 1px solid #e0ccb0;
     padding-top: .8rem;
-    margin-top: .5rem;
+    margin-top: .8rem;
 }
 
 .card summary {
     display: inline-block;
     list-style: none;
     cursor: pointer;
-
-    padding: 9px 13px;
-
+    padding: 8px 14px;
     border: 1px solid #c8a985;
     border-radius: 30px;
-
     background: #f5e5cf;
     color: #70472e;
-
-    font-size: .8rem;
+    font-size: .78rem;
     font-weight: 600;
-
     transition: background .2s;
 }
 
@@ -539,11 +355,11 @@ hr {
 }
 
 .card summary::after {
-    content: "  ＋";
+    content: " ＋";
 }
 
 .card details[open] summary::after {
-    content: "  −";
+    content: " −";
 }
 
 .card summary:hover {
@@ -553,8 +369,8 @@ hr {
 .details-text {
     color: #6f5845;
     font-size: .85rem;
-    line-height: 1.75;
-    padding-top: .7rem;
+    line-height: 1.7;
+    padding-top: .8rem;
 }
 
 .details-text strong {
@@ -563,11 +379,10 @@ hr {
 
 /* BOTONES DE ENLACE */
 
-.link-button,
-.pending {
+.link-button, .pending {
     display: inline-block;
-    margin-top: 8px;
-    padding: 10px 13px;
+    margin-top: 10px;
+    padding: 8px 14px;
     border-radius: 30px;
     font-size: .76rem;
     font-weight: 600;
@@ -589,63 +404,19 @@ hr {
     background: #f2e3ce;
 }
 
-/* MENSAJE INFERIOR */
+/* RESPONSIVO */
 
-.notice {
-    padding: 16px;
-    border: 1px solid #d2b895;
-    border-radius: 14px;
-    background: #fff9eea8;
-    color: #765a43;
-}
-
-.footer {
-    text-align: center;
-    padding: 30px 0 10px;
-    color: #80654d;
-    font: .68rem 'DM Mono', monospace;
-    letter-spacing: .1em;
-}
-
-/* DISEÑO ADAPTABLE */
-
-@media (max-width: 950px) {
-    .gallery {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .hero-grid {
-        grid-template-columns: 1fr 210px;
-    }
-}
-
-@media (max-width: 620px) {
-    .gallery,
+@media (max-width: 900px) {
     .hero-grid {
         grid-template-columns: 1fr;
+        gap: 1.5rem;
     }
-
     .portrait-frame {
-        max-width: 220px;
+        max-width: 260px;
+        margin: 0 auto;
     }
-
-    .portrait {
-        height: 220px;
-    }
-
-    .card:hover {
-        transform: translateY(-4px) scale(1.01);
-    }
-}
-
-/* RESPETAR PREFERENCIAS DE MOVIMIENTO */
-
-@media (prefers-reduced-motion: reduce) {
-    *,
-    *::before,
-    *::after {
-        animation-duration: .01ms !important;
-        transition-duration: .01ms !important;
+    .gallery {
+        grid-template-columns: 1fr;
     }
 }
 </style>
@@ -653,7 +424,7 @@ hr {
 
 
 # ==========================================================
-# PORTADA PRINCIPAL
+# PORTADA PRINCIPAL (FOTO IZQUIERDA / TEXTO DERECHA)
 # ==========================================================
 
 foto_portada = cargar_foto(FOTO, "portrait")
@@ -661,39 +432,24 @@ foto_portada = cargar_foto(FOTO, "portrait")
 st.markdown(f"""
 <section class="hero">
     <div class="hero-grid">
+        <div class="portrait-frame">
+            {foto_portada}
+            <div class="caption">TU NOMBRE · PORTAFOLIO II</div>
+        </div>
         <div>
-            <div class="eyebrow">
-                Cuaderno digital · Semestre II · Edición 02
-            </div>
-
-            <h1>
-                Interfaces<br>
-                <em>multimodales.</em>
-            </h1>
-
+            <div class="eyebrow">Cuaderno digital · Semestre II · Edición 02</div>
+            <h1>Interfaces<br><em>multimodales.</em></h1>
             <div class="hero-copy">
-                Hola, soy <strong>Tu nombre aquí</strong>.
-                Este espacio reúne mis experiencias, experimentos
-                y aprendizajes de la segunda parte del semestre.
-
-                <br><br>
-
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                Aprender haciendo, experimentar sin miedo y transformar
-                ideas en experiencias interactivas.
+                Hola, soy <strong>Tu nombre aquí</strong>. Este espacio reúne mis experiencias, 
+                experimentos y aprendizajes de la segunda parte del semestre. Aprender haciendo, 
+                experimentar sin miedo y transformar ideas en experiencias interactivas.
             </div>
-
             <div class="tags">
                 <span class="tag">✳ Diseño interactivo</span>
                 <span class="tag">⌘ Experimentación</span>
                 <span class="tag">↗ Aprender haciendo</span>
                 <span class="tag">☕ Edición vintage</span>
             </div>
-        </div>
-
-        <div class="portrait-frame">
-            {foto_portada}
-            <div class="caption">TU NOMBRE · PORTAFOLIO II</div>
         </div>
     </div>
 </section>
@@ -707,15 +463,9 @@ st.markdown(f"""
 with st.sidebar:
     st.markdown("# Archivo creativo")
     st.markdown("**PORTAFOLIO · SEGUNDA ETAPA**")
-
-    st.write(
-        "Una colección de actividades, recursos y pruebas de clase. "
-        "Esta versión utiliza contenido provisional para probar el diseño."
-    )
-
+    st.write("Una colección de actividades, recursos y pruebas de clase.")
     st.markdown("---")
     st.markdown("### Dentro del cuaderno")
-
     st.markdown("""
     - ✎ Dibujo y reconocimiento
     - ◉ Sensores y simulación
@@ -723,88 +473,15 @@ with st.sidebar:
     - ↗ Repositorios y proyectos
     - ✧ Reflexiones
     """)
-
     st.markdown("---")
-    st.caption("Plantilla de prueba · Hecha con curiosidad y café.")
+    st.caption("Plantilla para GitHub · Hecha con café y código.")
 
 
 # ==========================================================
-# CONTENIDO PROVISIONAL
+# LÍNEA DIVISORIA ESTÉTICA
 # ==========================================================
 
-texto_lorem = (
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. "
-    "Integer vitae sem sed justo malesuada finibus. Este texto "
-    "es provisional y podrás sustituirlo por la descripción real "
-    "de la actividad desarrollada en clase."
-)
-
-aprendizaje_lorem = (
-    "Lorem ipsum dolor sit amet. Escribe aquí el concepto, "
-    "la habilidad o la reflexión que te dejó esta actividad."
-)
-
-
-# ==========================================================
-# ACTIVIDADES DE EJEMPLO
-# ==========================================================
-
-actividades = [
-    {
-        "titulo": "Actividad de ejemplo uno",
-        "categoria": "Práctica · 01",
-        "resumen": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-        "descripcion": texto_lorem,
-        "aprendizaje": aprendizaje_lorem,
-        "url": "",
-        "boton": "Ir a la actividad",
-    },
-    {
-        "titulo": "Actividad de ejemplo dos",
-        "categoria": "Experimentación · 02",
-        "resumen": "Sed do eiusmod tempor incididunt ut labore et dolore.",
-        "descripcion": texto_lorem,
-        "aprendizaje": aprendizaje_lorem,
-        "url": "",
-        "boton": "Abrir recurso",
-    },
-    {
-        "titulo": "Actividad de ejemplo tres",
-        "categoria": "Interfaz · 03",
-        "resumen": "Ut enim ad minim veniam, quis nostrud exercitation.",
-        "descripcion": texto_lorem,
-        "aprendizaje": aprendizaje_lorem,
-        "url": "",
-        "boton": "Ver proyecto",
-    },
-    {
-        "titulo": "Actividad de ejemplo cuatro",
-        "categoria": "Simulación · 04",
-        "resumen": "Duis aute irure dolor in reprehenderit in voluptate.",
-        "descripcion": texto_lorem,
-        "aprendizaje": aprendizaje_lorem,
-        "url": "",
-        "boton": "Explorar",
-    },
-    {
-        "titulo": "Actividad de ejemplo cinco",
-        "categoria": "Tecnología · 05",
-        "resumen": "Excepteur sint occaecat cupidatat non proident.",
-        "descripcion": texto_lorem,
-        "aprendizaje": aprendizaje_lorem,
-        "url": "",
-        "boton": "Ir al recurso",
-    },
-    {
-        "titulo": "Actividad de ejemplo seis",
-        "categoria": "Aprendizaje · 06",
-        "resumen": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-        "descripcion": texto_lorem,
-        "aprendizaje": aprendizaje_lorem,
-        "url": "",
-        "boton": "Conocer más",
-    },
-]
+st.markdown("<hr>", unsafe_allow_html=True)
 
 
 # ==========================================================
@@ -813,16 +490,30 @@ actividades = [
 
 st.markdown("""
 <div class="section-title">
-    <div class="eyebrow">Galería de procesos · 01—∞</div>
-
-    <h2>Mis actividades prácticas</h2>
-
-    <p>
-        Pasa el cursor sobre las Polaroids para descubrir sus efectos.
-        Pulsa «Leer más información» para abrir los detalles.
-    </p>
+    <div class="eyebrow">Galería de procesos · 01—08</div>
+    <h2>Actividades prácticas realizadas</h2>
+    <p>Pasa el cursor sobre las Polaroids para ver el efecto y despliega los detalles de cada práctica.</p>
 </div>
 """, unsafe_allow_html=True)
+
+
+# ==========================================================
+# DATOS DE LAS 8 ACTIVIDADES
+# ==========================================================
+
+texto_lorem = "Descripción detallada provisional de la actividad práctica desarrollada en clase."
+aprendizaje_lorem = "Concepto clave, habilidad o reflexión obtenida en este ejercicio."
+
+actividades = [
+    {"titulo": "Actividad práctica uno", "categoria": "Práctica · 01", "resumen": "Primer acercamiento a interfaces y prototipado multimodal.", "descripcion": texto_lorem, "aprendizaje": aprendizaje_lorem, "url": "", "boton": "Abrir recurso"},
+    {"titulo": "Actividad práctica dos", "categoria": "Experimentación · 02", "resumen": "Pruebas de interacción con sensores y estímulos visuales.", "descripcion": texto_lorem, "aprendizaje": aprendizaje_lorem, "url": "", "boton": "Abrir recurso"},
+    {"titulo": "Actividad práctica tres", "categoria": "Interfaz · 03", "resumen": "Diseño de flujos de navegación orientados al usuario.", "descripcion": texto_lorem, "aprendizaje": aprendizaje_lorem, "url": "", "boton": "Abrir recurso"},
+    {"titulo": "Actividad práctica cuatro", "categoria": "Simulación · 04", "resumen": "Simulación de escenarios interactivos en entornos virtuales.", "descripcion": texto_lorem, "aprendizaje": aprendizaje_lorem, "url": "", "boton": "Abrir recurso"},
+    {"titulo": "Actividad práctica cinco", "categoria": "Tecnología · 05", "resumen": "Implementación de herramientas tecnológicas avanzadas.", "descripcion": texto_lorem, "aprendizaje": aprendizaje_lorem, "url": "", "boton": "Abrir recurso"},
+    {"titulo": "Actividad práctica seis", "categoria": "Desarrollo · 06", "resumen": "Construcción de componentes dinámicos y adaptativos.", "descripcion": texto_lorem, "aprendizaje": aprendizaje_lorem, "url": "", "boton": "Abrir recurso"},
+    {"titulo": "Actividad práctica siete", "categoria": "Evaluación · 07", "resumen": "Pruebas de usabilidad y análisis de retroalimentación.", "descripcion": texto_lorem, "aprendizaje": aprendizaje_lorem, "url": "", "boton": "Abrir recurso"},
+    {"titulo": "Actividad práctica ocho", "categoria": "Proyecto Final · 08", "resumen": "Consolidación de aprendizajes del portafolio multimodal.", "descripcion": texto_lorem, "aprendizaje": aprendizaje_lorem, "url": "", "boton": "Abrir recurso"},
+]
 
 
 # ==========================================================
@@ -833,49 +524,34 @@ def tarjeta(actividad, numero):
     foto = cargar_foto(FOTO, "polaroid")
     boton = crear_enlace(actividad["url"], actividad["boton"])
 
-    titulo = esc(actividad["titulo"])
-    categoria = esc(actividad["categoria"])
-    resumen = esc(actividad["resumen"])
-    descripcion = esc(actividad["descripcion"])
-    aprendizaje = esc(actividad["aprendizaje"])
-
     return f"""
     <article class="card">
-
         {foto}
-
         <div class="meta">
-            <span>{categoria}</span>
+            <span>{esc(actividad["categoria"])}</span>
             <span class="number">{numero:02d}</span>
         </div>
-
-        <h3>{titulo}</h3>
-
+        <h3>{esc(actividad["titulo"])}</h3>
         <div class="summary">
-            {resumen}
+            {esc(actividad["resumen"])}
         </div>
-
         <details>
             <summary>Leer más información</summary>
-
             <div class="details-text">
-                <p>{descripcion}</p>
-
+                <p>{esc(actividad["descripcion"])}</p>
                 <p>
                     <strong>Lo que me llevo:</strong>
-                    {aprendizaje}
+                    {esc(actividad["aprendizaje"])}
                 </p>
-
                 {boton}
             </div>
         </details>
-
     </article>
     """
 
 
 # ==========================================================
-# CONSTRUIR Y MOSTRAR LA GALERÍA
+# CONSTRUIR Y MOSTRAR LA GALERÍA (2 COLUMNAS)
 # ==========================================================
 
 galeria = "".join(
@@ -883,10 +559,7 @@ galeria = "".join(
     for numero, actividad in enumerate(actividades, start=1)
 )
 
-st.markdown(
-    f'<div class="gallery">{galeria}</div>',
-    unsafe_allow_html=True,
-)
+st.markdown(f'<div class="gallery">{galeria}</div>', unsafe_allow_html=True)
 
 
 # ==========================================================
@@ -894,14 +567,8 @@ st.markdown(
 # ==========================================================
 
 st.markdown("""
-<div class="notice">
-    ✦ <strong>Modo demostración:</strong>
-    los textos son provisionales. Todas las tarjetas y la portada
-    utilizan el mismo archivo de imagen, Blanco.jpg. Los enlaces
-    se pueden completar cuando tengas tus actividades listas.
-</div>
-
-<div class="footer">
-    FIN DE LA PÁGINA, NO DEL PROCESO · DISEÑADO CON CURIOSIDAD
+<hr>
+<div style="padding: 16px; border: 1px solid #d2b895; border-radius: 14px; background: #fff9eea8; color: #765a43; text-align: center; font-size: 0.9rem;">
+    ✦ <strong>Modo demostración:</strong> Sube tu imagen como <code>Blanco.jpg</code> en el repositorio de GitHub junto a este archivo <code>app.py</code>.
 </div>
 """, unsafe_allow_html=True)
