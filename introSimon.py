@@ -130,7 +130,7 @@ st.markdown(
         font-family:'Playfair Display',serif;
         font-size:1.2rem;
         color:#f8e9d2;
-        margin-bottom:.7rem;
+        margin-bottom:1rem;
       }
 
       .pf-about-title {
@@ -152,7 +152,7 @@ st.markdown(
         display:flex;
         align-items:center;
         gap:.6rem;
-        padding:.35rem 0;
+        padding:.65rem 0;
         cursor:pointer;
         font-size:.9rem;
         color:#e8d5bf;
@@ -182,13 +182,13 @@ st.markdown(
         overflow:hidden !important;
       }
 
-      @media (max-height:760px) {
+      @media (max-height:820px) {
         .pf-star {margin:.4rem 0 .4rem;}
         .pf-sub {margin-bottom:.6rem;}
         .pf-desc {font-size:.8rem;line-height:1.5;margin-bottom:.4rem;}
         .pf-div {margin:.7rem 0;}
         .pf-h {margin-bottom:.3rem;}
-        .nav-item {padding:.2rem 0;font-size:.85rem;}
+        .nav-item {padding:.4rem 0;font-size:.85rem;}
       }
     </style>
     """,
@@ -538,7 +538,14 @@ h1,h2,h3,.font-serif-custom {
     overflow:hidden;
     opacity:0;
     margin-top:0;
-    transition:max-height .45s ease,opacity .3s ease,margin-top .3s ease;
+    transition:max-height .45s ease,opacity .3s ease,margin-top .3s ease,
+               padding-top .3s ease;
+}
+
+/* Cerrado: sin relleno ni línea, para que no deje espacio en blanco */
+.expandable-content:not(.open) {
+    padding-top:0 !important;
+    border-top-width:0 !important;
 }
 
 .expandable-content.open {
@@ -1517,7 +1524,7 @@ function renderGrid(lista,contenedorId) {
                     ${crearContenido(item,index)}
                 </div>
 
-                <div class="card-actions mt-5 pt-3 border-t border-[#ebd8bf]/70">
+                <div class="card-actions mt-3 pt-3 border-t border-[#ebd8bf]/70">
                     ${crearBotones(item)}
                 </div>
             `;
