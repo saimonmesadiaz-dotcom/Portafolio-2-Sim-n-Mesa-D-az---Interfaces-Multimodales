@@ -133,6 +133,21 @@ st.markdown(
         margin-bottom:.7rem;
       }
 
+      .pf-about-title {
+        font-family:'Playfair Display',serif;
+        font-size:1.05rem;
+        font-weight:700;
+        color:#f8e9d2;
+        line-height:1.3;
+        margin-bottom:.6rem;
+      }
+
+      .pf-about {
+        font-size:.84rem;
+        line-height:1.65;
+        color:#dfc8ae;
+      }
+
       .nav-item {
         display:flex;
         align-items:center;
@@ -186,8 +201,25 @@ SIDEBAR_HTML = """
     </div>
 
     <div class="pf-div"></div>
+    <div class="pf-about-title">
+        Aplicaciones e Interfaces Multimodales y de Inteligencia Artificial
+    </div>
+    <div class="pf-about">
+        Este portafolio reúne las actividades desarrolladas durante la
+        primera mitad del curso de Creación de Interfaces Multimodales,
+        donde estamos explorando diferentes herramientas y tecnologías
+        de inteligencia artificial aplicadas a la interacción digital.
+        A través de ejercicios de procesamiento de texto, audio e imágenes,
+        reconocimiento de voz, visión artificial y aprendizaje automático,
+        experimenté con distintas formas de crear interfaces más interactivas,
+        accesibles y dinámicas.
+    </div>
+
+    <div class="pf-div"></div>
     <div class="pf-h">Dentro del cuaderno</div>
 
+    <div class="nav-item" data-target="parte-1"><span>❖</span> Parte 1 · Primeras actividades</div>
+    <div class="nav-item" data-target="parte-2"><span>✦</span> Parte 2 · Portafolio del semestre</div>
     <div class="nav-item" data-target="card-1"><span>✎</span> Dibujo y reconocimiento</div>
     <div class="nav-item" data-target="card-2"><span>◉</span> Sensores y simulación</div>
     <div class="nav-item" data-target="card-5"><span>⌘</span> Herramientas tecnológicas</div>
@@ -198,10 +230,13 @@ SIDEBAR_HTML = """
 </div>
 """
 
-# CORRECCIÓN: Markdown interpreta las líneas con 4+ espacios de sangría
-# (después de una línea en blanco) como bloque de código y rompe el HTML.
-# Se compacta el HTML quitando sangrías y saltos de línea.
-SIDEBAR_HTML = "".join(linea.strip() for linea in SIDEBAR_HTML.splitlines())
+# Markdown interpreta las líneas con 4+ espacios de sangría (después de una
+# línea en blanco) como bloque de código y rompe el HTML. Se compacta el HTML
+# en una sola línea, quitando sangrías y uniendo con un espacio para que las
+# palabras no queden pegadas.
+SIDEBAR_HTML = " ".join(
+    linea.strip() for linea in SIDEBAR_HTML.splitlines() if linea.strip()
+)
 
 st.sidebar.markdown(SIDEBAR_HTML, unsafe_allow_html=True)
 
@@ -515,6 +550,44 @@ h1,h2,h3,.font-serif-custom {
     border-top:1px solid rgba(213,190,160,.7);
 }
 
+/* DIVISOR ENTRE PARTE 1 Y PARTE 2 */
+.part-divider {
+    display:flex;
+    align-items:center;
+    gap:1.2rem;
+    margin:4rem 0 2.5rem;
+}
+
+.part-divider .line {
+    flex:1;
+    height:1px;
+    background:linear-gradient(
+        90deg,transparent,#98704e 30%,#e0c49e 50%,
+        #98704e 70%,transparent
+    );
+}
+
+.part-divider .label {
+    font-family:'DM Mono',monospace;
+    font-size:.78rem;
+    letter-spacing:.2em;
+    text-transform:uppercase;
+    color:#8d5b3d;
+    padding:.5rem 1.2rem;
+    border:1px solid #cdb393;
+    border-radius:999px;
+    background:#fff9ef;
+    white-space:nowrap;
+}
+
+@media (max-width:640px) {
+    .part-divider .label {
+        white-space:normal;
+        text-align:center;
+        letter-spacing:.12em;
+    }
+}
+
 /* TARJETA DE RESPALDO DE IMAGEN */
 .img-fallback {
     display:flex;
@@ -777,9 +850,33 @@ body::after {
 
     <hr class="vintage-divider">
 
+    <!-- PARTE 1 -->
+    <section id="parte-1" class="mb-8">
+        <div class="font-mono-custom text-xs tracking-widest text-[#8d5b3d] uppercase mb-1">
+            Parte 1 · Primera sesión del semestre 2026-2 · 01—10
+        </div>
+        <h2 class="text-3xl md:text-4xl font-bold text-[#38251d]">
+            Primeras actividades realizadas en clase
+        </h2>
+        <p class="text-sm text-[#725942] mt-2">
+            Los primeros experimentos del semestre: texto, voz, imagen y visión
+            artificial aplicados a interfaces web interactivas.
+        </p>
+    </section>
+
+    <div class="gallery-grid" id="cardsContainerP1"></div>
+
+    <!-- DIVISOR PARTE 2 -->
+    <div id="parte-2" class="part-divider">
+        <span class="line"></span>
+        <span class="label">✦ Parte 2 · Portafolio del semestre ✦</span>
+        <span class="line"></span>
+    </div>
+
+    <!-- PARTE 2 -->
     <section class="mb-8">
         <div class="font-mono-custom text-xs tracking-widest text-[#8d5b3d] uppercase mb-1">
-            Galería de procesos · 01—07
+            Parte 2 · Galería de procesos · 01—07
         </div>
         <h2 class="text-3xl md:text-4xl font-bold text-[#38251d]">
             Actividades prácticas realizadas
@@ -828,10 +925,147 @@ body::after {
 // ============================================================
 // CONTENIDO DE LAS ACTIVIDADES
 // Para editar el portafolio, modifica estos datos.
-// La variable aprendizaje se conserva.
+// La variable aprendizaje se conserva (solo en la Parte 2).
 // ============================================================
 
-const actividades = [
+// ============================================================
+// PARTE 1: PRIMERA SESIÓN DEL SEMESTRE 2026-2
+// Sin apartado "Lo que aprendí". Las URLs no se modifican.
+// La imagen se busca junto a app.py (campo "imagen").
+// ============================================================
+
+const actividadesParte1 = [
+    {
+        id:101,
+        titulo:"Mi primer repositorio - Intro GitHub",
+        categoria:"GitHub · 01",
+        resumen:"Mi primer repositorio en GitHub, usado para publicar y modificar una interfaz web.",
+        descripcion:"Exploración inicial de GitHub como herramienta para el desarrollo y publicación de interfaces. Se experimentó con modificaciones visuales y transformaciones básicas de imágenes dentro de una interfaz de formato web, como primer paso para trabajar con repositorios.",
+        imagen:"SnoopyP.jpg",
+        archivo:"SnoopyP.jpg",
+        enlaces:[
+            {texto:"Intro Repositorio Snoopy", url:"https://el-primer-repo-de-saimon-fnendgpad7jxzqwkawtxsa.streamlit.app/"}
+        ]
+    },
+    {
+        id:102,
+        titulo:"Conversión de texto a audio",
+        categoria:"Texto a voz · 02",
+        resumen:"Una interfaz que lee en voz alta el texto que escribo.",
+        descripcion:"Desarrollo de una interfaz para convertir texto escrito en audio, explorando herramientas de voz que facilitan la interacción con contenidos escritos. Se publicaron dos versiones: una con fábulas como contenido de ejemplo y otra de texto a voz de uso general.",
+        imagen:"LECTURA.png",
+        archivo:"LECTURA.png",
+        enlaces:[
+            {texto:"Fábulas: Texto a Voz", url:"https://gaticorat-cxqqen2bqdsebk6fnnoapf.streamlit.app/"},
+            {texto:"Texto a Voz", url:"https://gaticorat-v3kscp9uekqdd9qqfauysz.streamlit.app/"}
+        ]
+    },
+    {
+        id:103,
+        titulo:"Voz a texto multilingüe",
+        categoria:"Voz a texto · 03",
+        resumen:"Convierte lo que digo en texto, en seis idiomas distintos.",
+        descripcion:"Creación de una interfaz capaz de transformar audio de voz en texto en diferentes idiomas, incluyendo español, inglés, francés, italiano, alemán y mandarín. Muestra cómo la voz puede ser un canal de entrada más natural que el teclado.",
+        imagen:"Traduccion.avif",
+        archivo:"Traduccion.avif",
+        enlaces:[
+            {texto:"Traductor", url:"https://traductorsimon-5msaydpezd7zgwclllbkmy.streamlit.app/"}
+        ]
+    },
+    {
+        id:104,
+        titulo:"Interfaz OCR Audio y análisis estadístico",
+        categoria:"OCR · 04",
+        resumen:"Extrae el texto de una imagen y analiza sus vocales, con temática de playa.",
+        descripcion:"Interfaz de conversión de imagen a texto, complementada con un análisis estadístico de las vocales identificadas en el contenido extraído. La propuesta de diseño incorporó una temática playera para integrar una visual personalizada.",
+        imagen:"Playa.jpg",
+        archivo:"Playa.jpg",
+        enlaces:[
+            {texto:"OCR Audio Temático", url:"https://ocr-audiosimon-awv2toavjnd8nxdt7uuqvh.streamlit.app/"}
+        ]
+    },
+    {
+        id:105,
+        titulo:"WordCloud - Nube de palabras",
+        categoria:"Lenguaje · 05",
+        resumen:"Nubes de palabras que muestran los términos más relevantes de un texto.",
+        descripcion:"Creación de nubes de palabras a partir de fragmentos de texto para representar visualmente los términos más relevantes. Se exploró el uso de TextBlob y técnicas de procesamiento de lenguaje natural.",
+        imagen:"WORDCLOUD.png",
+        archivo:"WORDCLOUD.png",
+        enlaces:[
+            {texto:"WordCloud", url:"https://wordcloudsimon-5ftjecuahge5koe5fvwyka.streamlit.app/"}
+        ]
+    },
+    {
+        id:106,
+        titulo:"Análisis sentimientos - Emociones",
+        categoria:"Emociones · 06",
+        resumen:"Detecta las emociones de un texto y responde con animaciones y videos.",
+        descripcion:"Interfaz que identifica sentimientos y emociones presentes en un texto de entrada. Los resultados se complementaron con animaciones de Lottie y videos asociados a las emociones detectadas.",
+        imagen:"EMOCIONES.png",
+        archivo:"EMOCIONES.png",
+        enlaces:[
+            {texto:"Análisis de sentimientos", url:"https://sentimentasimon-kxq5k5hfxwdmkofrfih48x.streamlit.app/"}
+        ]
+    },
+    {
+        id:107,
+        titulo:"Evaluación automática - TF-IDF",
+        categoria:"TF-IDF · 07",
+        resumen:"Genera preguntas y respuestas automáticas a partir de textos.",
+        descripcion:"Creación de una interfaz para generar preguntas y respuestas automáticas a partir de textos mediante procesamiento de lenguaje natural. Se utilizó TF-IDF para identificar términos relevantes dentro de conjuntos de documentos.",
+        imagen:"PREGUNTAS.png",
+        archivo:"PREGUNTAS.png",
+        enlaces:[
+            {texto:"TF-IDF", url:"https://tdfespsimon-5bvcznbfcefdobupqjkmqe.streamlit.app/"}
+        ]
+    },
+    {
+        id:108,
+        titulo:"YOLO - Detección de objetos",
+        categoria:"Visión · 08",
+        resumen:"Un modelo que detecta y reconoce objetos dentro de imágenes.",
+        descripcion:"Exploración del modelo YOLO (You Only Look Once) para el reconocimiento y detección de objetos en imágenes. La actividad permitió comprender cómo la inteligencia artificial puede interpretar información visual.",
+        imagen:"CAPTCHA.png",
+        archivo:"CAPTCHA.png",
+        enlaces:[
+            {texto:"YOLO", url:"https://yolov5simon-hzxwgknlx5tajlvax74gns.streamlit.app/"}
+        ]
+    },
+    {
+        id:109,
+        titulo:"Teachable Machine - Reconocer objetos",
+        categoria:"Aprendizaje · 09",
+        resumen:"Un modelo entrenado por mí que reconoce personas en tiempo real.",
+        descripcion:"Experimentación con Teachable Machine de Google para entrenar modelos personalizados de aprendizaje automático. Se realizaron pruebas de reconocimiento de personas en tiempo real.",
+        imagen:"FACEID.png",
+        archivo:"FACEID.png",
+        enlaces:[
+            {texto:"Teachable Machine", url:"https://t8pwvf7om2y4dwtcjzvsyu.streamlit.app/"}
+        ]
+    },
+    {
+        id:110,
+        ancha:true,
+        titulo:"Imagen a texto - Reconocimiento Óptico de Caracteres OCR",
+        categoria:"OCR · 10",
+        resumen:"Extrae texto editable a partir de imágenes usando OCR.",
+        descripcion:"Implementación de OCR para extraer texto a partir de imágenes. La actividad permitió explorar cómo una imagen con información escrita puede ser procesada y convertida en texto editable. Se publicaron dos interfaces: la versión de reconocimiento óptico de caracteres y una versión de OCR sin intervención.",
+        imagen:"ocr.png",
+        archivo:"ocr.png",
+        enlaces:[
+            {texto:"Reconocimiento óptico de caracteres", url:"https://ocrsimonclase7-7mfw3mnqwhzk63smvxw2sv.streamlit.app/"},
+            {texto:"Interfaz OCR sin intervención", url:"https://ocr-audiosimon-abfnnjajxn75g8upksqeq6.streamlit.app/"}
+        ]
+    }
+];
+
+
+// ============================================================
+// PARTE 2: ACTIVIDADES DEL PORTAFOLIO DEL SEMESTRE
+// ============================================================
+
+const actividadesParte2 = [
     {
         id:1,
         titulo:"Actividad 01: Detección de Números a través de dibujos",
@@ -894,6 +1128,7 @@ const actividades = [
     },
     {
         id:7,
+        ancha:true,
         titulo:"Actividad 07: Control Multimodal por Voz (Ctrl_Voice)",
         categoria:"Hardware · 07",
         resumen:"Control de luces y puertas mediante comandos vocales procesados en la web y transmitidos al simulador.",
@@ -1098,17 +1333,30 @@ const FOTO=(
 ).src||'Simon.jpeg';
 
 function crearImagen(item) {
+    const src=item.imagen||FOTO;
+    const etiqueta=item.archivo?'Imagen no encontrada':'Fotografía '+item.id;
+    const archivo=item.archivo||'Simon.jpeg';
+
     return `
         <div class="polaroid-img-wrapper">
-            <img src="${FOTO}"
+            <img src="${src}"
                  alt="${item.titulo}"
                  class="polaroid-img"
-                 onerror="this.onerror=null;this.parentElement.innerHTML='<div class=\\'img-fallback\\'><span class=\\'text-3xl\\'>✦</span><strong class=\\'text-sm mt-1\\'>Fotografía ${item.id}</strong><small class=\\'text-[11px]\\'>Simon.jpeg</small></div>';">
+                 onerror="this.onerror=null;this.parentElement.innerHTML='<div class=\\'img-fallback\\'><span class=\\'text-3xl\\'>✦</span><strong class=\\'text-sm mt-1\\'>${etiqueta}</strong><small class=\\'text-[11px]\\'>${archivo}</small></div>';">
         </div>
     `;
 }
 
 function crearContenido(item,index) {
+    // Solo las actividades de la Parte 2 tienen "Lo que aprendí".
+    const bloqueAprendizaje=item.aprendizaje?`
+            <div class="bg-[#f5e9d6] p-3 rounded-lg border border-[#e2d0b5]">
+                <strong class="text-[#38251d] block mb-0.5">
+                    Lo que aprendí:
+                </strong>
+                ${item.aprendizaje}
+            </div>`:'';
+
     return `
         <div class="flex justify-between items-center mb-2 font-mono-custom text-xs uppercase text-[#8d5b3d]">
             <span>${item.categoria}</span>
@@ -1129,18 +1377,26 @@ function crearContenido(item,index) {
              class="expandable-content border-t border-[#e0ccb0] pt-3 text-xs md:text-sm text-[#614a37] space-y-2">
 
             <p>${item.descripcion}</p>
-
-            <div class="bg-[#f5e9d6] p-3 rounded-lg border border-[#e2d0b5]">
-                <strong class="text-[#38251d] block mb-0.5">
-                    Lo que aprendí:
-                </strong>
-                ${item.aprendizaje}
-            </div>
+            ${bloqueAprendizaje}
         </div>
     `;
 }
 
 function crearBotones(item) {
+    // Una actividad puede tener uno o varios enlaces.
+    const enlaces=item.enlaces||[
+        {texto:item.botonTexto||'Abrir recurso',url:item.url}
+    ];
+
+    const links=enlaces.map(e=>`
+        <a href="${e.url}"
+           target="_blank"
+           rel="noopener noreferrer"
+           class="btn-vintage btn-link">
+            ↗ ${e.texto}
+        </a>
+    `).join('');
+
     return `
         <button type="button"
                 onclick="toggleExpand(${item.id})"
@@ -1148,29 +1404,25 @@ function crearBotones(item) {
             <span id="btn-text-${item.id}">Leer más</span>
         </button>
 
-        <a href="${item.url}"
-           target="_blank"
-           rel="noopener noreferrer"
-           class="btn-vintage btn-link">
-            ↗ ${item.botonTexto}
-        </a>
+        ${links}
     `;
 }
 
-function renderCards() {
-    const container=document.getElementById('cardsContainer');
+function renderGrid(lista,contenedorId) {
+    const container=document.getElementById(contenedorId);
+    if (!container) return;
+
     container.innerHTML='';
 
-    actividades.forEach((item,index)=>{
+    lista.forEach((item,index)=>{
         const card=document.createElement('article');
-        const esUltima=item.id===7;
 
         card.className='polaroid-card reveal';
 
-        if (esUltima) {
+        if (item.ancha) {
             card.classList.add('polaroid-card-wide');
 
-            // Actividad 7: foto izquierda; contenido y botones derecha.
+            // Tarjeta horizontal: foto izquierda; contenido y botones derecha.
             card.innerHTML=`
                 <div class="wide-image">
                     ${crearImagen(item)}
@@ -1207,7 +1459,11 @@ function renderCards() {
         attachSparkles(card);
         revealObserver.observe(card);
     });
+}
 
+function renderCards() {
+    renderGrid(actividadesParte1,'cardsContainerP1');
+    renderGrid(actividadesParte2,'cardsContainer');
     fitFrame();
 }
 
@@ -1216,29 +1472,24 @@ function renderCards() {
 // BOTÓN LEER MÁS / VER MENOS
 // Cada card se abre y se cierra de forma independiente.
 //
-// Problema original: la grilla usa align-items:stretch, así que
-// al abrir una card las demás de su fila se estiraban con ella.
-// Solución: al abrir la primera card, se "congela" la altura
-// original de las demás; al cerrar la última, se restaura todo.
+// La grilla usa align-items:stretch, así que al abrir una card
+// las demás de su fila se estiraban con ella. Al abrir la primera
+// card de una grilla se "congela" la altura original de las demás;
+// al cerrar la última, se restaura todo. Cada grilla (Parte 1 y
+// Parte 2) funciona de forma independiente.
 // ============================================================
 
-function getContainer() {
-    return document.getElementById('cardsContainer');
+function tarjetasAbiertas(container) {
+    return container.querySelectorAll('.expandable-content.open').length;
 }
 
-function tarjetasAbiertas() {
-    return getContainer().querySelectorAll('.expandable-content.open').length;
+function tarjetasNormales(container) {
+    return container.querySelectorAll('.polaroid-card:not(.polaroid-card-wide)');
 }
 
-function tarjetasNormales() {
-    return getContainer().querySelectorAll('.polaroid-card:not(.polaroid-card-wide)');
-}
-
-function congelarAlturas() {
-    const container=getContainer();
-
+function congelarAlturas(container) {
     // Se mide ANTES de abrir nada, con todas las cards en su estado original.
-    tarjetasNormales().forEach(c=>{
+    tarjetasNormales(container).forEach(c=>{
         const h=c.offsetHeight;
         c.dataset.h=h;
         c.style.height=h+'px';
@@ -1247,10 +1498,8 @@ function congelarAlturas() {
     container.classList.add('has-open');
 }
 
-function liberarAlturas() {
-    const container=getContainer();
-
-    tarjetasNormales().forEach(c=>{
+function liberarAlturas(container) {
+    tarjetasNormales(container).forEach(c=>{
         c.style.height='';
         delete c.dataset.h;
     });
@@ -1265,12 +1514,13 @@ function toggleExpand(id) {
 
     if (!content || !btnText || !card) return;
 
+    const container=card.parentElement;
     const esAncha=card.classList.contains('polaroid-card-wide');
     const isOpen=content.classList.contains('open');
 
     if (!isOpen) {
         // ABRIR: solo esta card crece; las demás conservan su altura.
-        if (tarjetasAbiertas()===0) congelarAlturas();
+        if (tarjetasAbiertas(container)===0) congelarAlturas(container);
 
         if (!esAncha) card.style.height='auto';
 
@@ -1285,8 +1535,8 @@ function toggleExpand(id) {
             // Si la volvieron a abrir mientras tanto, no hacer nada.
             if (content.classList.contains('open')) return;
 
-            if (tarjetasAbiertas()===0) {
-                liberarAlturas();
+            if (tarjetasAbiertas(container)===0) {
+                liberarAlturas(container);
             } else if (!esAncha && card.dataset.h) {
                 card.style.height=card.dataset.h+'px';
             }
@@ -1301,7 +1551,7 @@ function toggleExpand(id) {
 }
 
 // Si cambia el ANCHO de la ventana, las alturas congeladas dejan de
-// ser válidas: se cierran todas las cards y se restaura la grilla.
+// ser válidas: se cierran todas las cards y se restauran las grillas.
 // (Cambios de alto del iframe se ignoran a propósito.)
 let anchoPrevio=window.innerWidth;
 
@@ -1317,7 +1567,7 @@ window.addEventListener('resize',()=>{
         b.textContent='Leer más';
     });
 
-    liberarAlturas();
+    document.querySelectorAll('.gallery-grid').forEach(liberarAlturas);
     fitFrame();
 });
 
@@ -1357,7 +1607,11 @@ window.addEventListener('DOMContentLoaded',()=>{
 # INCRUSTAR LAS IMÁGENES LOCALES EN EL HTML
 # ============================================================
 
-EXTENSIONES={".jpg",".jpeg",".png",".webp",".gif"}
+EXTENSIONES={".jpg",".jpeg",".png",".webp",".gif",".avif"}
+
+MIME_EXTRA={".avif":"image/avif"}
+
+PATRON_EXT=r"(?:jpe?g|png|webp|gif|avif)"
 
 
 def buscar_imagen(nombre):
@@ -1382,24 +1636,49 @@ def buscar_imagen(nombre):
     return None
 
 
+def a_data_uri(nombre):
+    """Devuelve la imagen como data URI, o None si no se encuentra."""
+    f=buscar_imagen(nombre)
+
+    if f is None:
+        return None
+
+    mime=(
+        MIME_EXTRA.get(f.suffix.lower())
+        or mimetypes.guess_type(f.name)[0]
+        or "image/jpeg"
+    )
+    b64=base64.b64encode(f.read_bytes()).decode()
+
+    return f"data:{mime};base64,{b64}"
+
+
 def incrustar_imagenes(html):
-    def reemplazo(m):
-        f=buscar_imagen(m.group(1))
+    # 1) Imágenes escritas en el HTML:  src="Simon.jpeg"
+    def reemplazo_src(m):
+        uri=a_data_uri(m.group(1))
+        return m.group(0) if uri is None else f'src="{uri}"'
 
-        if f is None:
-            return m.group(0)
+    # 2) Imágenes de las actividades (datos JS):  imagen:"SnoopyP.jpg"
+    def reemplazo_imagen(m):
+        uri=a_data_uri(m.group(1))
+        return m.group(0) if uri is None else f'imagen:"{uri}"'
 
-        mime=mimetypes.guess_type(f.name)[0] or "image/jpeg"
-        b64=base64.b64encode(f.read_bytes()).decode()
-
-        return f'src="data:{mime};base64,{b64}"'
-
-    return re.sub(
-        r'src="([^"/:]+\.(?:jpe?g|png|webp|gif))"',
-        reemplazo,
+    html=re.sub(
+        r'src="([^"/:]+\.' + PATRON_EXT + r')"',
+        reemplazo_src,
         html,
         flags=re.I
     )
+
+    html=re.sub(
+        r'imagen:"([^"/:]+\.' + PATRON_EXT + r')"',
+        reemplazo_imagen,
+        html,
+        flags=re.I
+    )
+
+    return html
 
 
 HTML=incrustar_imagenes(HTML)
