@@ -1143,7 +1143,8 @@ const actividadesParte2 = [
         descripcion:"Descripción ampliada de la actividad 02: qué hice, con qué herramientas y cómo funciona.",
         aprendizaje:"Lo que aprendí en la actividad 02.",
         url:"https://github.com",
-        botonTexto:"Abrir recurso"
+        botonTexto:"Abrir recurso",
+        
     },
     {
         id:1,
@@ -1153,6 +1154,8 @@ const actividadesParte2 = [
         descripcion:"MNIST es una base de datos compuesta por 70,000 imágenes de dígitos escritos a mano. Desplegué la aplicación del repositorio y escribí diferentes números; el modelo reconoce lo escrito después de revisar el Google Colab.",
         aprendizaje:"Aprendí cómo las redes convolucionales aprenden bordes, formas y texturas, y que el trazo debe prepararse para que el modelo lo interprete bien.",
         url:"https://mnistpredsimon-5vckfxydhqvco4snzsuo8s.streamlit.app/",
+        botonTexto:"Abrir recurso",
+        url:"https://github.com",
         botonTexto:"Abrir recurso"
     },
     {
