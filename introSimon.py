@@ -896,7 +896,7 @@ body::after {
                     cursando el sexto semestre del pregrado de Diseño Interactivo
                     en la Universidad EAFIT. Este espacio reúne mis experiencias,
                     experimentos y aprendizajes de las clases
-                    de "Creación de Interfaces Multimodales" del semestre.
+                    de "Creación de Interfaces Multimodales".
                     <br><br>
                     Aprender haciendo, experimentar sin miedo y transformar
                     códigos e ideas en experiencias interactivas con intención
