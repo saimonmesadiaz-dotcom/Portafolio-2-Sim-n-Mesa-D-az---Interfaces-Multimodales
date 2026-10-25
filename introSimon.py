@@ -427,6 +427,21 @@ h1,h2,h3,.font-serif-custom {
     border-color:#a8583b !important;
 }
 
+/* IMÁGENES CUADRADAS (Parte 1): se ven completas, sin recortar */
+.polaroid-img-wrapper.img-cuadrada {
+    height:auto;
+    aspect-ratio:1 / 1;
+}
+
+.polaroid-img-wrapper.img-cuadrada .polaroid-img {
+    object-fit:contain;
+}
+
+.polaroid-card-wide .polaroid-img-wrapper.img-cuadrada {
+    height:100%;
+    aspect-ratio:auto;
+}
+
 /* BOTONES */
 .btn-vintage {
     display:inline-flex;
@@ -752,6 +767,11 @@ body::after {
         min-height:0;
     }
 
+    .polaroid-card-wide .polaroid-img-wrapper.img-cuadrada {
+        height:auto;
+        aspect-ratio:1 / 1;
+    }
+
     .polaroid-card-wide .wide-content {
         grid-column:1;
         grid-row:2;
@@ -838,11 +858,8 @@ body::after {
 
     <!-- PARTE 1 -->
     <section id="parte-1" class="mb-8">
-        <div class="font-mono-custom text-xs tracking-widest text-[#8d5b3d] uppercase mb-1">
-            Parte 1 · Primera sesión del semestre 2026-2 · 01—10
-        </div>
         <h2 class="text-3xl md:text-4xl font-bold text-[#38251d]">
-            Primeras actividades realizadas en clase
+            Parte 1 · Primera sesión del semestre 2026-2
         </h2>
         <p class="text-sm text-[#725942] mt-2">
             Los primeros experimentos del semestre: texto, voz, imagen y visión
@@ -861,15 +878,13 @@ body::after {
 
     <!-- PARTE 2 -->
     <section class="mb-8">
-        <div class="font-mono-custom text-xs tracking-widest text-[#8d5b3d] uppercase mb-1">
-            Parte 2 · Galería de procesos · 01—07
-        </div>
         <h2 class="text-3xl md:text-4xl font-bold text-[#38251d]">
-            Actividades prácticas realizadas
+            Parte 2 · Actividades prácticas realizadas
         </h2>
         <p class="text-sm text-[#725942] mt-2">
-            Cada tarjeta es un experimento: una manera distinta de combinar
-            sentidos y canales para que las personas interactúen con la tecnología.
+            Sensores y circuitos simulados en Wokwi conectados mediante MQTT,
+            tableros de dibujo personalizados y reconocimiento visual: desde
+            dígitos y bocetos hasta historias creadas a partir de lo que dibujo.
         </p>
     </section>
 
@@ -1324,7 +1339,7 @@ function crearImagen(item) {
     const archivo=item.archivo||'Simon.jpeg';
 
     return `
-        <div class="polaroid-img-wrapper">
+        <div class="polaroid-img-wrapper${item.imagen?' img-cuadrada':''}">
             <img src="${src}"
                  alt="${item.titulo}"
                  class="polaroid-img"
