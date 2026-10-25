@@ -1127,17 +1127,17 @@ const actividadesParte1 = [
 const actividadesParte2 = [
     {
         id:8,
-        titulo:"Actividad 01: Título de la actividad",
+        titulo:"Título de la actividad",
         categoria:"Proyecto · 01",
-        resumen:"Resumen breve de la actividad 01. Reemplaza este texto genérico por el tuyo.",
-        descripcion:"Descripción ampliada de la actividad 01: qué hice, con qué herramientas y cómo funciona.",
-        aprendizaje:"Lo que aprendí en la actividad 01.",
-        url:"https://github.com",
-        botonTexto:"Abrir recurso"
+        resumen:"Creación de una interfaz interactiva que utiliza inteligencia artificial para consultar, analizar y resumir documentos PDF mediante preguntas en lenguaje natural.",
+        descripcion:"Página de consulta personalizada, inspirada en la estética vintage de la industria musical,  mediante técnicas de recuperación aumentada por generación (RAG). ",
+        aprendizaje:"Esta interfaz utiliza herramientas como LangChain, FAISS y la API de OpenAI para extraer información de documentos y generar respuestas relevantes.",
+        url:"https://chatpdfsimon-bby2djpahj5u2tm8yff3sg.streamlit.app/",
+        botonTexto:"Chat PDF - Música"
     },
     {
         id:9,
-        titulo:"Actividad 02: Título de la actividad",
+        titulo:"Título de la actividad",
         categoria:"Proyecto · 02",
         resumen:"Resumen breve de la actividad 02. Reemplaza este texto genérico por el tuyo.",
         descripcion:"Descripción ampliada de la actividad 02: qué hice, con qué herramientas y cómo funciona.",
@@ -1148,19 +1148,19 @@ const actividadesParte2 = [
     },
     {
         id:1,
-        titulo:"Actividad 03: Detección de Números a través de dibujos",
+        titulo:"Detección de Números a través de dibujos",
         categoria:"Práctica · 03",
         resumen:"Una red neuronal entrenada con MNIST que reconoce los dígitos que dibujo sobre un lienzo.",
         descripcion:"MNIST es una base de datos compuesta por 70,000 imágenes de dígitos escritos a mano. Desplegué la aplicación del repositorio y escribí diferentes números; el modelo reconoce lo escrito después de revisar el Google Colab.",
         aprendizaje:"Aprendí cómo las redes convolucionales aprenden bordes, formas y texturas, y que el trazo debe prepararse para que el modelo lo interprete bien.",
         enlaces:[
             {texto:"Tablero 1", url:"https://mnistpredsimon-5vckfxydhqvco4snzsuo8s.streamlit.app/"},
-            {texto:"Personalizado ", url:"https://ocr-audiosimon-abfnnjajxn75g8upksqeq6.streamlit.app/"}
+            {texto:"Galáctico ", url:"https://mnistpersonalizadogalaxia-fwwzdfnjutkvabqcyzvf25.streamlit.app/"}
         ]
     },
     {
         id:2,
-        titulo:"Actividad 04 (Editada) - Tablero Personalizado",
+        titulo:"Actividad (Editada) - Tablero Personalizado",
         categoria:"Edición · 04",
         resumen:"Un tablero de dibujo cuyas propiedades puedo configurar a mi gusto.",
         descripcion:"Edité el ejemplo inicial de la primera actividad para que las propiedades del tablero se configuren desde la interfaz.",
@@ -1170,7 +1170,7 @@ const actividadesParte2 = [
     },
     {
         id:3,
-        titulo:"Actividad 05: Tablero Reconocimiento",
+        titulo:"Tablero Reconocimiento",
         categoria:"Interfaz · 05",
         resumen:"Un tablero que reconoce lo que dibujo usando modelos de visión.",
         descripcion:"Combiné el tablero con un modelo de visión que identifica bocetos.",
@@ -1180,7 +1180,7 @@ const actividadesParte2 = [
     },
     {
         id:4,
-        titulo:"Actividad 06: Tablero Personalizado Cuenta Historias",
+        titulo:"Tablero Personalizado Cuenta Historias",
         categoria:"Simulación · 06",
         resumen:"Un tablero digital que convierte mis dibujos en historias.",
         descripcion:"Fui más allá de reconocer una figura para crear narrativamente una historia con contexto.",
@@ -1190,7 +1190,7 @@ const actividadesParte2 = [
     },
     {
         id:5,
-        titulo:"Actividad 07: Recepción de Datos MQTT (Recep_mqtt)",
+        titulo:"Recepción de Datos MQTT (Recep_mqtt)",
         categoria:"Tecnología · 07",
         resumen:"Monitoreo en tiempo real de telemetría desde un sensor analógico simulado en Wokwi hacia la app en Streamlit.",
         descripcion:"Se organizó bajo la arquitectura cliente-broker. Un circuito en Wokwi actúa como cliente publicador, enviando lecturas de un sensor analógico a un broker MQTT en un tópico específico. La app en Streamlit opera como cliente suscriptor, conectándose al broker y escuchando ese tópico para visualizar los datos en vivo.",
@@ -1200,7 +1200,7 @@ const actividadesParte2 = [
     },
     {
         id:6,
-        titulo:"Actividad 08: Publicación y Telecontrol MQTT",
+        titulo:"Publicación y Telecontrol MQTT",
         categoria:"Aprendizaje · 08",
         resumen:"Telecontrol bidireccional desde la interfaz web para activar LEDs en el simulador Wokwi.",
         descripcion:"Se invirtió el flujo de control: la app en Streamlit funciona como cliente publicador, enviando comandos de encendido/apagado de luces y ángulo del servomotor a un tópico del broker MQTT. En Wokwi, el microcontrolador actúa como cliente suscriptor, escuchando el tópico para ejecutar las acciones en el hardware simulado.",
@@ -1210,7 +1210,7 @@ const actividadesParte2 = [
     },
     {
         id:7,
-        titulo:"Actividad 09: Control Multimodal por Voz (Ctrl_Voice)",
+        titulo:"Control Multimodal por Voz (Ctrl_Voice)",
         categoria:"Hardware · 09",
         resumen:"Control de luces y puertas mediante comandos vocales procesados en la web y transmitidos al simulador.",
         descripcion:"Se estructuró capturando la voz del usuario en un cliente web (Streamlit), traduciendo frases habladas en variables lógicas. Estas se publican hacia el broker MQTT dentro del tópico correspondiente, donde el microcontrolador en Wokwi (cliente suscriptor) recibe la orden y mueve el servomotor o altera los LEDs.",
