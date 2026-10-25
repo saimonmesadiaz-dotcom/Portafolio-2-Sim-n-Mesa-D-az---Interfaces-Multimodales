@@ -205,8 +205,7 @@ SIDEBAR_HTML = """
         Aplicaciones e Interfaces Multimodales y de Inteligencia Artificial
     </div>
     <div class="pf-about">
-        Este portafolio reúne las actividades desarrolladas durante la
-        primera mitad del curso de Creación de Interfaces Multimodales,
+        Este portafolio reúne las actividades desarrolladas
         donde estamos explorando diferentes herramientas y tecnologías
         de inteligencia artificial aplicadas a la interacción digital.
         A través de ejercicios de procesamiento de texto, audio e imágenes,
