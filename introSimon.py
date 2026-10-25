@@ -208,9 +208,7 @@ SIDEBAR_HTML = """
         Este portafolio reúne las actividades desarrolladas
         donde estamos explorando diferentes herramientas y tecnologías
         de inteligencia artificial aplicadas a la interacción digital.
-        A través de ejercicios de procesamiento de texto, audio e imágenes,
-        reconocimiento de voz, visión artificial y aprendizaje automático,
-        experimenté con distintas formas de crear interfaces más interactivas,
+        Experimenté con distintas formas de crear interfaces más interactivas,
         accesibles y dinámicas.
     </div>
 
