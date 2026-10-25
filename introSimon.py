@@ -175,13 +175,20 @@ st.markdown(
         color:#e8c27a;
       }
 
-      .pf-foot {
-        margin-top:1.6rem;
-        padding-top:1rem;
-        border-top:1px solid rgba(101,68,47,.5);
-        font-family:'DM Mono',monospace;
-        font-size:.72rem;
-        color:#b89c7d;
+      /* Barra lateral fija: sin scroll (se puede ocultar y mostrar) */
+      section[data-testid="stSidebar"] > div,
+      [data-testid="stSidebarContent"],
+      [data-testid="stSidebarUserContent"] {
+        overflow:hidden !important;
+      }
+
+      @media (max-height:760px) {
+        .pf-star {margin:.4rem 0 .4rem;}
+        .pf-sub {margin-bottom:.6rem;}
+        .pf-desc {font-size:.8rem;line-height:1.5;margin-bottom:.4rem;}
+        .pf-div {margin:.7rem 0;}
+        .pf-h {margin-bottom:.3rem;}
+        .nav-item {padding:.2rem 0;font-size:.85rem;}
       }
     </style>
     """,
@@ -212,7 +219,6 @@ SIDEBAR_HTML = """
     <div class="nav-item" data-target="card-7"><span>↗</span> Repositorios y proyectos</div>
     <div class="nav-item" data-target="reflexiones"><span>✧</span> Reflexiones</div>
 
-    <div class="pf-foot">Voz · Gesto · Tacto · Imagen · Sonido</div>
 </div>
 """
 
@@ -479,6 +485,51 @@ h1,h2,h3,.font-serif-custom {
     background:#38251d;
     color:#fff;
     box-shadow:0 4px 10px rgba(56,37,29,.25);
+}
+
+/* PARTE 1: las cards se ajustan a su contenido (sin espacio en blanco abajo) */
+#cardsContainerP1 {
+    align-items:start;
+}
+
+/* BOTONES: "Leer más" + enlaces siempre en una misma fila */
+.card-actions {
+    display:flex;
+    align-items:stretch;
+    justify-content:space-between;
+    gap:8px;
+    flex-wrap:nowrap;
+}
+
+.link-group {
+    display:flex;
+    align-items:stretch;
+    justify-content:flex-end;
+    gap:8px;
+    flex:1 1 0;
+    min-width:0;
+}
+
+.link-group .btn-link {
+    flex:0 1 auto;
+    white-space:normal;
+    text-align:center;
+    line-height:1.2;
+}
+
+.link-group.multi .btn-link {
+    flex:1 1 0;
+    padding:8px 12px;
+}
+
+.polaroid-card-wide .wide-actions .link-group {
+    flex:0 1 auto;
+    justify-content:flex-start;
+}
+
+@media (max-width:480px) {
+    .card-actions {flex-wrap:wrap;}
+    .link-group {flex:1 1 100%;}
 }
 
 /* CONTENIDO DESPLEGABLE */
@@ -857,11 +908,11 @@ body::after {
     <hr class="vintage-divider">
 
     <!-- PARTE 1 -->
-    <section id="parte-1" class="mb-8">
+    <section id="parte-1" class="mb-8 text-center">
         <h2 class="text-3xl md:text-4xl font-bold text-[#38251d]">
             Parte 1 · Primera sesión del semestre 2026-2
         </h2>
-        <p class="text-sm text-[#725942] mt-2">
+        <p class="text-sm text-[#725942] mt-2 max-w-3xl mx-auto">
             Los primeros experimentos del semestre: texto, voz, imagen y visión
             artificial aplicados a interfaces web interactivas.
         </p>
@@ -877,11 +928,11 @@ body::after {
     </div>
 
     <!-- PARTE 2 -->
-    <section class="mb-8">
+    <section class="mb-8 text-center">
         <h2 class="text-3xl md:text-4xl font-bold text-[#38251d]">
             Parte 2 · Actividades prácticas realizadas
         </h2>
-        <p class="text-sm text-[#725942] mt-2">
+        <p class="text-sm text-[#725942] mt-2 max-w-3xl mx-auto">
             Sensores y circuitos simulados en Wokwi conectados mediante MQTT,
             tableros de dibujo personalizados y reconocimiento visual: desde
             dígitos y bocetos hasta historias creadas a partir de lo que dibujo.
@@ -1068,9 +1119,29 @@ const actividadesParte1 = [
 
 const actividadesParte2 = [
     {
+        id:8,
+        titulo:"Actividad 01: Título de la actividad",
+        categoria:"Proyecto · 01",
+        resumen:"Resumen breve de la actividad 01. Reemplaza este texto genérico por el tuyo.",
+        descripcion:"Descripción ampliada de la actividad 01: qué hice, con qué herramientas y cómo funciona.",
+        aprendizaje:"Lo que aprendí en la actividad 01.",
+        url:"https://github.com",
+        botonTexto:"Abrir recurso"
+    },
+    {
+        id:9,
+        titulo:"Actividad 02: Título de la actividad",
+        categoria:"Proyecto · 02",
+        resumen:"Resumen breve de la actividad 02. Reemplaza este texto genérico por el tuyo.",
+        descripcion:"Descripción ampliada de la actividad 02: qué hice, con qué herramientas y cómo funciona.",
+        aprendizaje:"Lo que aprendí en la actividad 02.",
+        url:"https://github.com",
+        botonTexto:"Abrir recurso"
+    },
+    {
         id:1,
-        titulo:"Actividad 01: Detección de Números a través de dibujos",
-        categoria:"Práctica · 01",
+        titulo:"Actividad 03: Detección de Números a través de dibujos",
+        categoria:"Práctica · 03",
         resumen:"Una red neuronal entrenada con MNIST que reconoce los dígitos que dibujo sobre un lienzo.",
         descripcion:"MNIST es una base de datos compuesta por 70,000 imágenes de dígitos escritos a mano. Desplegué la aplicación del repositorio y escribí diferentes números; el modelo reconoce lo escrito después de revisar el Google Colab.",
         aprendizaje:"Aprendí cómo las redes convolucionales aprenden bordes, formas y texturas, y que el trazo debe prepararse para que el modelo lo interprete bien.",
@@ -1079,8 +1150,8 @@ const actividadesParte2 = [
     },
     {
         id:2,
-        titulo:"Actividad 02 (Editada) - Tablero Personalizado",
-        categoria:"Edición · 02",
+        titulo:"Actividad 04 (Editada) - Tablero Personalizado",
+        categoria:"Edición · 04",
         resumen:"Un tablero de dibujo cuyas propiedades puedo configurar a mi gusto.",
         descripcion:"Edité el ejemplo inicial de la primera actividad para que las propiedades del tablero se configuren desde la interfaz.",
         aprendizaje:"Personalizar la herramienta es parte de diseñar la interacción; se practica cómo exponer parámetros con los controles de Streamlit.",
@@ -1089,8 +1160,8 @@ const actividadesParte2 = [
     },
     {
         id:3,
-        titulo:"Actividad 03: Tablero Reconocimiento",
-        categoria:"Interfaz · 03",
+        titulo:"Actividad 05: Tablero Reconocimiento",
+        categoria:"Interfaz · 05",
         resumen:"Un tablero que reconoce lo que dibujo usando modelos de visión.",
         descripcion:"Combiné el tablero con un modelo de visión que identifica bocetos.",
         aprendizaje:"Aprendí la diferencia entre un clasificador de una sola tarea (MNIST) y un modelo de visión más general, y cómo dibujo e imagen funcionan como un canal multimodal de reconocimiento.",
@@ -1099,8 +1170,8 @@ const actividadesParte2 = [
     },
     {
         id:4,
-        titulo:"Actividad 04: Tablero Personalizado Cuenta Historias",
-        categoria:"Simulación · 04",
+        titulo:"Actividad 06: Tablero Personalizado Cuenta Historias",
+        categoria:"Simulación · 06",
         resumen:"Un tablero digital que convierte mis dibujos en historias.",
         descripcion:"Fui más allá de reconocer una figura para crear narrativamente una historia con contexto.",
         aprendizaje:"Aprendí a pensar el reconocimiento como el inicio de una experiencia y a encadenar una entrada visual con una salida de texto.",
@@ -1109,8 +1180,8 @@ const actividadesParte2 = [
     },
     {
         id:5,
-        titulo:"Actividad 05: Recepción de Datos MQTT (Recep_mqtt)",
-        categoria:"Tecnología · 05",
+        titulo:"Actividad 07: Recepción de Datos MQTT (Recep_mqtt)",
+        categoria:"Tecnología · 07",
         resumen:"Monitoreo en tiempo real de telemetría desde un sensor analógico simulado en Wokwi hacia la app en Streamlit.",
         descripcion:"Se organizó bajo la arquitectura cliente-broker. Un circuito en Wokwi actúa como cliente publicador, enviando lecturas de un sensor analógico a un broker MQTT en un tópico específico. La app en Streamlit opera como cliente suscriptor, conectándose al broker y escuchando ese tópico para visualizar los datos en vivo.",
         aprendizaje:"Entendí el patrón Publish/Subscribe, cómo el broker gestiona los mensajes y cómo recibir flujo continuo de telemetría en un cliente web.",
@@ -1119,8 +1190,8 @@ const actividadesParte2 = [
     },
     {
         id:6,
-        titulo:"Actividad 06: Publicación y Telecontrol MQTT",
-        categoria:"Aprendizaje · 06",
+        titulo:"Actividad 08: Publicación y Telecontrol MQTT",
+        categoria:"Aprendizaje · 08",
         resumen:"Telecontrol bidireccional desde la interfaz web para activar LEDs en el simulador Wokwi.",
         descripcion:"Se invirtió el flujo de control: la app en Streamlit funciona como cliente publicador, enviando comandos de encendido/apagado de luces y ángulo del servomotor a un tópico del broker MQTT. En Wokwi, el microcontrolador actúa como cliente suscriptor, escuchando el tópico para ejecutar las acciones en el hardware simulado.",
         aprendizaje:"Aprendí a estructurar comandos de control desde un cliente web hacia actuadores remotos usando tópicos de instrucción en el broker MQTT.",
@@ -1129,9 +1200,8 @@ const actividadesParte2 = [
     },
     {
         id:7,
-        ancha:true,
-        titulo:"Actividad 07: Control Multimodal por Voz (Ctrl_Voice)",
-        categoria:"Hardware · 07",
+        titulo:"Actividad 09: Control Multimodal por Voz (Ctrl_Voice)",
+        categoria:"Hardware · 09",
         resumen:"Control de luces y puertas mediante comandos vocales procesados en la web y transmitidos al simulador.",
         descripcion:"Se estructuró capturando la voz del usuario en un cliente web (Streamlit), traduciendo frases habladas en variables lógicas. Estas se publican hacia el broker MQTT dentro del tópico correspondiente, donde el microcontrolador en Wokwi (cliente suscriptor) recibe la orden y mueve el servomotor o altera los LEDs.",
         aprendizaje:"Aprendí a integrar la voz como canal de entrada multimodal y a mapear eventos de audio con comandos enviados a través de un broker MQTT.",
@@ -1405,7 +1475,7 @@ function crearBotones(item) {
             <span id="btn-text-${item.id}">Leer más</span>
         </button>
 
-        ${links}
+        <div class="link-group${enlaces.length>1?' multi':''}">${links}</div>
     `;
 }
 
@@ -1447,7 +1517,7 @@ function renderGrid(lista,contenedorId) {
                     ${crearContenido(item,index)}
                 </div>
 
-                <div class="flex items-center justify-between gap-3 mt-5 pt-3 border-t border-[#ebd8bf]/70 flex-wrap">
+                <div class="card-actions mt-5 pt-3 border-t border-[#ebd8bf]/70">
                     ${crearBotones(item)}
                 </div>
             `;
