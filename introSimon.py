@@ -201,9 +201,7 @@ SIDEBAR_HTML = """
         dialogar con la tecnología.
     </div>
 
-    <div class="pf-div"></div>
-    <div class="pf-about-title">
-        Aplicaciones e Interfaces Multimodales y de Inteligencia Artificial
+
     </div>
     <div class="pf-about">
         Este portafolio reúne las actividades desarrolladas
