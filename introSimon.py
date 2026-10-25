@@ -199,7 +199,7 @@ SIDEBAR_HTML = """
 <div class="pf-side">
     <div class="pf-star">✦</div>
     <div class="pf-title">Archivo Creativo</div>
-    <div class="pf-sub">Portafolio · Segunda etapa</div>
+    <div class="pf-sub">Portafolio · Interfaces Multimodales</div>
 
     <div class="pf-desc">
         Una colección de experimentos donde la voz, el gesto, el tacto
@@ -895,7 +895,7 @@ body::after {
                     Hola, soy <strong>Simón Mesa Díaz</strong> y me encuentro
                     cursando el sexto semestre del pregrado de Diseño Interactivo
                     en la Universidad EAFIT. Este espacio reúne mis experiencias,
-                    experimentos y aprendizajes de la segunda parte de las clases
+                    experimentos y aprendizajes de las clases
                     de "Creación de Interfaces Multimodales" del semestre.
                     <br><br>
                     Aprender haciendo, experimentar sin miedo y transformar
