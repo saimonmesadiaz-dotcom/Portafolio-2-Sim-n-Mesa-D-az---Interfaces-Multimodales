@@ -1153,10 +1153,10 @@ const actividadesParte2 = [
         resumen:"Una red neuronal entrenada con MNIST que reconoce los dígitos que dibujo sobre un lienzo.",
         descripcion:"MNIST es una base de datos compuesta por 70,000 imágenes de dígitos escritos a mano. Desplegué la aplicación del repositorio y escribí diferentes números; el modelo reconoce lo escrito después de revisar el Google Colab.",
         aprendizaje:"Aprendí cómo las redes convolucionales aprenden bordes, formas y texturas, y que el trazo debe prepararse para que el modelo lo interprete bien.",
-        url:"https://mnistpredsimon-5vckfxydhqvco4snzsuo8s.streamlit.app/",
-        botonTexto:"Abrir recurso",
-        url:"https://github.com",
-        botonTexto:"Abrir recurso"
+        enlaces:[
+            {texto:"Tablero 1", url:"https://mnistpredsimon-5vckfxydhqvco4snzsuo8s.streamlit.app/"},
+            {texto:"Personalizado Temática Galáctica", url:"https://ocr-audiosimon-abfnnjajxn75g8upksqeq6.streamlit.app/"}
+        ]
     },
     {
         id:2,
