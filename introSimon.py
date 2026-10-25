@@ -1155,7 +1155,7 @@ const actividadesParte2 = [
         aprendizaje:"Aprendí cómo las redes convolucionales aprenden bordes, formas y texturas, y que el trazo debe prepararse para que el modelo lo interprete bien.",
         enlaces:[
             {texto:"Tablero 1", url:"https://mnistpredsimon-5vckfxydhqvco4snzsuo8s.streamlit.app/"},
-            {texto:"Personalizado Temática Galáctica", url:"https://ocr-audiosimon-abfnnjajxn75g8upksqeq6.streamlit.app/"}
+            {texto:"Personalizado ", url:"https://ocr-audiosimon-abfnnjajxn75g8upksqeq6.streamlit.app/"}
         ]
     },
     {
