@@ -196,17 +196,9 @@ SIDEBAR_HTML = """
 
     <div class="pf-desc">
         Una colección de experimentos donde la voz, el gesto, el tacto
-        y la imagen se combinan para crear interfaces más interactivas,
+        y la imagen se combinan para crear interfaces digitales más interactivas,
         accesibles y dinámicas de
-        dialogar con la tecnología.
-    </div>
-
-
-    </div>
-    <div class="pf-about">
-        Este portafolio reúne las actividades desarrolladas
-        donde hemos explorado diferentes herramientas y tecnologías
-        de inteligencia artificial aplicadas a la interacción digital.
+        dialogar con la tecnología y la Inteligencia Artificial.
     </div>
 
     <div class="pf-div"></div>
