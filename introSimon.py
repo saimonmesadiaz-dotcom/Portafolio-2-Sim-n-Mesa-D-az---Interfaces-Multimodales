@@ -1155,6 +1155,8 @@ const actividadesParte2 = [
         resumen:"Una red neuronal entrenada con MNIST que reconoce los dígitos que dibujo sobre un lienzo.",
         descripcion:"MNIST es una base de datos compuesta por 70,000 imágenes de dígitos escritos a mano. Desplegué la aplicación del repositorio y escribí diferentes números; el modelo reconoce lo escrito después de revisar el Google Colab.",
         aprendizaje:"Aprendí cómo las redes convolucionales aprenden bordes, formas y texturas, y que el trazo debe prepararse para que el modelo lo interprete bien.",
+        imagen:"Marcianos.jpg",
+        archivo:"Marcianos.jpg",
         enlaces:[
             {texto:"Tablero 1", url:"https://mnistpredsimon-5vckfxydhqvco4snzsuo8s.streamlit.app/"},
             {texto:"Galáctico ", url:"https://mnistpersonalizadogalaxia-fwwzdfnjutkvabqcyzvf25.streamlit.app/"}
@@ -1167,6 +1169,8 @@ const actividadesParte2 = [
         resumen:"Un tablero de dibujo cuyas propiedades puedo configurar a mi gusto.",
         descripcion:"Edité el ejemplo inicial de la primera actividad para que las propiedades del tablero se configuren desde la interfaz.",
         aprendizaje:"Personalizar la herramienta es parte de diseñar la interacción; se practica cómo exponer parámetros con los controles de Streamlit.",
+        imagen:"NumLibre.jpg",
+        archivo:"NumLibre.jpg",
         url:"https://repositorio-2-simon-eg936rwzmxxzqdssn5lhlk.streamlit.app/",
         botonTexto:"Abrir recurso"
     },
@@ -1177,6 +1181,8 @@ const actividadesParte2 = [
         resumen:"Un tablero que reconoce lo que dibujo usando modelos de visión.",
         descripcion:"Combiné el tablero con un modelo de visión que identifica bocetos.",
         aprendizaje:"Aprendí la diferencia entre un clasificador de una sola tarea (MNIST) y un modelo de visión más general, y cómo dibujo e imagen funcionan como un canal multimodal de reconocimiento.",
+        imagen:"Carro.jpg",
+        archivo:"Carro.jpg",
         url:"https://drawrecogsimon-mrzchike38innmhbruk49k.streamlit.app/",
         botonTexto:"Abrir recurso"
     },
@@ -1187,6 +1193,8 @@ const actividadesParte2 = [
         resumen:"Un tablero digital que convierte mis dibujos en historias.",
         descripcion:"Fui más allá de reconocer una figura para crear narrativamente una historia con contexto.",
         aprendizaje:"Aprendí a pensar el reconocimiento como el inicio de una experiencia y a encadenar una entrada visual con una salida de texto.",
+        imagen:"Personalizado.jpg",
+        archivo:"Personalizado.jpg",
         url:"https://simonhistoriadibujo-cbtrgvlhhqu3aht43y8tlo.streamlit.app/",
         botonTexto:"Abrir recurso"
     },
