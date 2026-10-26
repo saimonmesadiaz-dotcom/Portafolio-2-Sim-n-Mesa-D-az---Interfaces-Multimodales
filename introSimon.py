@@ -1127,11 +1127,13 @@ const actividadesParte1 = [
 const actividadesParte2 = [
     {
         id:8,
-        titulo:"Título de la actividad",
+        titulo:"ChatPDF - Interpretación Docs",
         categoria:"Proyecto · 01",
         resumen:"Creación de una interfaz interactiva que utiliza inteligencia artificial para consultar, analizar y resumir documentos PDF mediante preguntas en lenguaje natural.",
         descripcion:"Página de consulta personalizada, inspirada en la estética vintage de la industria musical,  mediante técnicas de recuperación aumentada por generación (RAG). ",
         aprendizaje:"Esta interfaz utiliza herramientas como LangChain, FAISS y la API de OpenAI para extraer información de documentos y generar respuestas relevantes.",
+        imagen:"ChatPDF.jpg",
+        archivo:"ChatPDF.jpg",
         url:"https://chatpdfsimon-bby2djpahj5u2tm8yff3sg.streamlit.app/",
         botonTexto:"Chat PDF - Música"
     },
