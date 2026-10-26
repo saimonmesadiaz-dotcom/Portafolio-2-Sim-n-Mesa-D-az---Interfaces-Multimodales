@@ -1225,7 +1225,7 @@ const actividadesParte2 = [
         resumen:"Control de luces y puertas mediante comandos vocales procesados en la web y transmitidos al simulador.",
         descripcion:"Se estructuró capturando la voz del usuario en un cliente web (Streamlit), traduciendo frases habladas en variables lógicas. Estas se publican hacia el broker MQTT dentro del tópico correspondiente, donde el microcontrolador en Wokwi (cliente suscriptor) recibe la orden y mueve el servomotor o altera los LEDs.",
         aprendizaje:"Aprendí a integrar la voz como canal de entrada multimodal y a mapear eventos de audio con comandos enviados a través de un broker MQTT.",
-        url:"https://github.com",
+        url:"https://ctrlvoicesimon-skzxvxkj3e8l323ky3i5bp.streamlit.app/",
         botonTexto:"Abrir recurso"
     }
 ];
