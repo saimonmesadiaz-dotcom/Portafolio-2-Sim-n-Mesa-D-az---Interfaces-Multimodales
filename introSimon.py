@@ -1144,7 +1144,7 @@ const actividadesParte2 = [
         resumen:"Resumen breve de la actividad 02. Reemplaza este texto genérico por el tuyo.",
         descripcion:"Descripción ampliada de la actividad 02: qué hice, con qué herramientas y cómo funciona.",
         aprendizaje:"Lo que aprendí en la actividad 02.",
-        url:"https://github.com",
+        url:"https://vision-simon-lrwgkw5ffvjwfvxqmksc2n.streamlit.app/",
         botonTexto:"Abrir recurso",
         
     },
@@ -1205,6 +1205,8 @@ const actividadesParte2 = [
         resumen:"Monitoreo en tiempo real de telemetría desde un sensor analógico simulado en Wokwi hacia la app en Streamlit.",
         descripcion:"Se organizó bajo la arquitectura cliente-broker. Un circuito en Wokwi actúa como cliente publicador, enviando lecturas de un sensor analógico a un broker MQTT en un tópico específico. La app en Streamlit opera como cliente suscriptor, conectándose al broker y escuchando ese tópico para visualizar los datos en vivo.",
         aprendizaje:"Entendí el patrón Publish/Subscribe, cómo el broker gestiona los mensajes y cómo recibir flujo continuo de telemetría en un cliente web.",
+        imagen:"Portada.png",
+        archivo:"Portada.png",
         url:"https://recepmqtt-c632mej72ce2uypzr9henl.streamlit.app/",
         botonTexto:"Abrir recurso"
     },
