@@ -1128,7 +1128,7 @@ const actividadesParte2 = [
     {
         id:8,
         titulo:"ChatPDF - Interpretación Docs",
-        categoria:"Proyecto · 01",
+        categoria:"Proyecto de Procesamiento",
         resumen:"Creación de una interfaz interactiva que utiliza inteligencia artificial para consultar, analizar y resumir documentos PDF mediante preguntas en lenguaje natural.",
         descripcion:"Página de consulta personalizada, inspirada en la estética vintage de la industria musical,  mediante técnicas de recuperación aumentada por generación (RAG). ",
         aprendizaje:"Esta interfaz utiliza herramientas como LangChain, FAISS y la API de OpenAI para extraer información de documentos y generar respuestas relevantes.",
@@ -1139,19 +1139,21 @@ const actividadesParte2 = [
     },
     {
         id:9,
-        titulo:"Título de la actividad",
-        categoria:"Proyecto · 02",
-        resumen:"Resumen breve de la actividad 02. Reemplaza este texto genérico por el tuyo.",
-        descripcion:"Descripción ampliada de la actividad 02: qué hice, con qué herramientas y cómo funciona.",
-        aprendizaje:"Lo que aprendí en la actividad 02.",
+        titulo:"Análisis Visión Artificial",
+        categoria:"Computer Vision",
+        resumen:"Se construyó una app en Streamlit donde subes una imagen (JPG o PNG), opcionalmente haces una pregunta sobre ella, y el modelo la describe en tiempo real.",
+        descripcion:"La interfaz se rediseñó con un tema de observatorio astronómico: una vista previa que parece la mira de un telescopio.",
+        aprendizaje:"aprendí a crear una aplicación que analiza imágenes con inteligencia artificial. Usé GPT-4o, un modelo capaz de recibir una imagen junto con una instrucción y devolver una descripción en español. También entendí que el prompt importa: cuando el usuario añade contexto o una pregunta concreta, la respuesta mejora. Además, aprendí a mostrar el resultado en tiempo real, a medida que el modelo lo genera",
         url:"https://vision-simon-lrwgkw5ffvjwfvxqmksc2n.streamlit.app/",
+        imagen:"Observatorio.png",
+        archivo:"Observatorio.png",
         botonTexto:"Abrir recurso",
         
     },
     {
         id:1,
         titulo:"Detección de Números a través de dibujos",
-        categoria:"Práctica · 03",
+        categoria:"Práctica - Visión + GPT",
         resumen:"Una red neuronal entrenada con MNIST que reconoce los dígitos que dibujo sobre un lienzo.",
         descripcion:"MNIST es una base de datos compuesta por 70,000 imágenes de dígitos escritos a mano. Desplegué la aplicación del repositorio y escribí diferentes números; el modelo reconoce lo escrito después de revisar el Google Colab.",
         aprendizaje:"Aprendí cómo las redes convolucionales aprenden bordes, formas y texturas, y que el trazo debe prepararse para que el modelo lo interprete bien.",
@@ -1165,7 +1167,7 @@ const actividadesParte2 = [
     {
         id:2,
         titulo:"Actividad (Editada) - Tablero Personalizado",
-        categoria:"Edición · 04",
+        categoria:"Edición Números",
         resumen:"Un tablero de dibujo cuyas propiedades puedo configurar a mi gusto.",
         descripcion:"Edité el ejemplo inicial de la primera actividad para que las propiedades del tablero se configuren desde la interfaz.",
         aprendizaje:"Personalizar la herramienta es parte de diseñar la interacción; se practica cómo exponer parámetros con los controles de Streamlit.",
@@ -1177,7 +1179,7 @@ const actividadesParte2 = [
     {
         id:3,
         titulo:"Tablero Reconocimiento",
-        categoria:"Interfaz · 05",
+        categoria:"Interfaz - OCR",
         resumen:"Un tablero que reconoce lo que dibujo usando modelos de visión.",
         descripcion:"Combiné el tablero con un modelo de visión que identifica bocetos.",
         aprendizaje:"Aprendí la diferencia entre un clasificador de una sola tarea (MNIST) y un modelo de visión más general, y cómo dibujo e imagen funcionan como un canal multimodal de reconocimiento.",
@@ -1189,7 +1191,7 @@ const actividadesParte2 = [
     {
         id:4,
         titulo:"Tablero Personalizado Cuenta Historias",
-        categoria:"Simulación · 06",
+        categoria:"Simulación Personalizada",
         resumen:"Un tablero digital que convierte mis dibujos en historias.",
         descripcion:"Fui más allá de reconocer una figura para crear narrativamente una historia con contexto.",
         aprendizaje:"Aprendí a pensar el reconocimiento como el inicio de una experiencia y a encadenar una entrada visual con una salida de texto.",
@@ -1201,7 +1203,7 @@ const actividadesParte2 = [
     {
         id:5,
         titulo:"Recepción de Datos MQTT (Recep_mqtt)",
-        categoria:"Tecnología · 07",
+        categoria:"Tecnología",
         resumen:"Monitoreo en tiempo real de telemetría desde un sensor analógico simulado en Wokwi hacia la app en Streamlit.",
         descripcion:"Se organizó bajo la arquitectura cliente-broker. Un circuito en Wokwi actúa como cliente publicador, enviando lecturas de un sensor analógico a un broker MQTT en un tópico específico. La app en Streamlit opera como cliente suscriptor, conectándose al broker y escuchando ese tópico para visualizar los datos en vivo.",
         aprendizaje:"Entendí el patrón Publish/Subscribe, cómo el broker gestiona los mensajes y cómo recibir flujo continuo de telemetría en un cliente web.",
@@ -1213,21 +1215,25 @@ const actividadesParte2 = [
     {
         id:6,
         titulo:"Publicación y Telecontrol MQTT",
-        categoria:"Aprendizaje · 08",
+        categoria:"Aprendizaje Control Mundo Real",
         resumen:"Telecontrol bidireccional desde la interfaz web para activar LEDs en el simulador Wokwi.",
         descripcion:"Se invirtió el flujo de control: la app en Streamlit funciona como cliente publicador, enviando comandos de encendido/apagado de luces y ángulo del servomotor a un tópico del broker MQTT. En Wokwi, el microcontrolador actúa como cliente suscriptor, escuchando el tópico para ejecutar las acciones en el hardware simulado.",
         aprendizaje:"Aprendí a estructurar comandos de control desde un cliente web hacia actuadores remotos usando tópicos de instrucción en el broker MQTT.",
         url:"https://sendcmqttsimon-5e3raacaadr2kz3jago5z9.streamlit.app/",
+        imagen:"SEND.jpg",
+        archivo:"SEND.jpg",
         botonTexto:"Abrir recurso"
     },
     {
         id:7,
         titulo:"Control Multimodal por Voz (Ctrl_Voice)",
-        categoria:"Hardware · 09",
-        resumen:"Control de luces y puertas mediante comandos vocales procesados en la web y transmitidos al simulador.",
+        categoria:"Hardware y Voz",
+        resumen:"Control de luces y puertas de un carro mediante comandos vocales procesados en la web y transmitidos al simulador.",
         descripcion:"Se estructuró capturando la voz del usuario en un cliente web (Streamlit), traduciendo frases habladas en variables lógicas. Estas se publican hacia el broker MQTT dentro del tópico correspondiente, donde el microcontrolador en Wokwi (cliente suscriptor) recibe la orden y mueve el servomotor o altera los LEDs.",
         aprendizaje:"Aprendí a integrar la voz como canal de entrada multimodal y a mapear eventos de audio con comandos enviados a través de un broker MQTT.",
         url:"https://ctrlvoicesimon-skzxvxkj3e8l323ky3i5bp.streamlit.app/",
+        imagen:"Control.jpg",
+        archivo:"Control.jpg",
         botonTexto:"Abrir recurso"
     }
 ];
