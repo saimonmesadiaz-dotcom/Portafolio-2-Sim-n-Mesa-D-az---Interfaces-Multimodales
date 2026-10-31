@@ -448,6 +448,12 @@ h1,h2,h3,.font-serif-custom {
     aspect-ratio:auto;
 }
 
+/* PARTE 2: marcos de imagen en formato 16:9 (más achatados).
+   Solo afecta a la grilla #cardsContainer; la Parte 1 queda cuadrada. */
+#cardsContainer .polaroid-img-wrapper.img-cuadrada {
+    aspect-ratio:16 / 9;
+}
+
 /* BOTONES */
 .btn-vintage {
     display:inline-flex;
